@@ -17,6 +17,8 @@ import { Route as AccountRouteImport } from './routes/account'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as WatchLessonIdRouteImport } from './routes/watch.$lessonId'
 import { Route as SeriesSlugRouteImport } from './routes/series.$slug'
+import { Route as AdminSeriesRouteImport } from './routes/admin.series'
+import { Route as AdminSeriesIdRouteImport } from './routes/admin.series.$id'
 
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
@@ -58,37 +60,53 @@ const SeriesSlugRoute = SeriesSlugRouteImport.update({
   path: '/series/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminSeriesRoute = AdminSeriesRouteImport.update({
+  id: '/series',
+  path: '/series',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminSeriesIdRoute = AdminSeriesIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AdminSeriesRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/account': typeof AccountRoute
-  '/admin': typeof AdminRoute
+  '/admin': typeof AdminRouteWithChildren
   '/library': typeof LibraryRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
+  '/admin/series': typeof AdminSeriesRouteWithChildren
   '/series/$slug': typeof SeriesSlugRoute
   '/watch/$lessonId': typeof WatchLessonIdRoute
+  '/admin/series/$id': typeof AdminSeriesIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/account': typeof AccountRoute
-  '/admin': typeof AdminRoute
+  '/admin': typeof AdminRouteWithChildren
   '/library': typeof LibraryRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
+  '/admin/series': typeof AdminSeriesRouteWithChildren
   '/series/$slug': typeof SeriesSlugRoute
   '/watch/$lessonId': typeof WatchLessonIdRoute
+  '/admin/series/$id': typeof AdminSeriesIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/account': typeof AccountRoute
-  '/admin': typeof AdminRoute
+  '/admin': typeof AdminRouteWithChildren
   '/library': typeof LibraryRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
+  '/admin/series': typeof AdminSeriesRouteWithChildren
   '/series/$slug': typeof SeriesSlugRoute
   '/watch/$lessonId': typeof WatchLessonIdRoute
+  '/admin/series/$id': typeof AdminSeriesIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -99,8 +117,10 @@ export interface FileRouteTypes {
     | '/library'
     | '/login'
     | '/signup'
+    | '/admin/series'
     | '/series/$slug'
     | '/watch/$lessonId'
+    | '/admin/series/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -109,8 +129,10 @@ export interface FileRouteTypes {
     | '/library'
     | '/login'
     | '/signup'
+    | '/admin/series'
     | '/series/$slug'
     | '/watch/$lessonId'
+    | '/admin/series/$id'
   id:
     | '__root__'
     | '/'
@@ -119,14 +141,16 @@ export interface FileRouteTypes {
     | '/library'
     | '/login'
     | '/signup'
+    | '/admin/series'
     | '/series/$slug'
     | '/watch/$lessonId'
+    | '/admin/series/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AccountRoute: typeof AccountRoute
-  AdminRoute: typeof AdminRoute
+  AdminRoute: typeof AdminRouteWithChildren
   LibraryRoute: typeof LibraryRoute
   LoginRoute: typeof LoginRoute
   SignupRoute: typeof SignupRoute
@@ -192,13 +216,49 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SeriesSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/series': {
+      id: '/admin/series'
+      path: '/series'
+      fullPath: '/admin/series'
+      preLoaderRoute: typeof AdminSeriesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/series/$id': {
+      id: '/admin/series/$id'
+      path: '/$id'
+      fullPath: '/admin/series/$id'
+      preLoaderRoute: typeof AdminSeriesIdRouteImport
+      parentRoute: typeof AdminSeriesRoute
+    }
   }
 }
+
+interface AdminSeriesRouteChildren {
+  AdminSeriesIdRoute: typeof AdminSeriesIdRoute
+}
+
+const AdminSeriesRouteChildren: AdminSeriesRouteChildren = {
+  AdminSeriesIdRoute: AdminSeriesIdRoute,
+}
+
+const AdminSeriesRouteWithChildren = AdminSeriesRoute._addFileChildren(
+  AdminSeriesRouteChildren,
+)
+
+interface AdminRouteChildren {
+  AdminSeriesRoute: typeof AdminSeriesRouteWithChildren
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminSeriesRoute: AdminSeriesRouteWithChildren,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AccountRoute: AccountRoute,
-  AdminRoute: AdminRoute,
+  AdminRoute: AdminRouteWithChildren,
   LibraryRoute: LibraryRoute,
   LoginRoute: LoginRoute,
   SignupRoute: SignupRoute,
