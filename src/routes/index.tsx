@@ -72,7 +72,7 @@ function Home() {
               <p className="font-sans text-[11px] font-medium uppercase tracking-[0.28em] text-[var(--color-summit-2)]">
                 Elevation Bible Study · The Thousand-Foot View
               </p>
-              <h1 className="mt-6 font-display text-5xl font-extrabold leading-[1.02] tracking-tight text-[var(--color-paper)] md:text-6xl lg:text-7xl">
+              <h1 className="mt-6 h-hero text-[var(--color-paper)]">
                 Step back, and Scripture{" "}
                 <span className="text-[var(--color-summit-2)]">
                   snaps into focus.
@@ -147,7 +147,7 @@ function WhyExistsSection() {
           <p className="font-sans text-[11px] font-medium uppercase tracking-[0.28em] text-[var(--color-summit)]">
             Why this study exists
           </p>
-          <h2 className="mt-6 font-display text-4xl font-extrabold leading-[1.05] tracking-tight text-[var(--color-ink)] md:text-5xl lg:text-6xl">
+          <h2 className="mt-6 h-section text-[var(--color-ink)]">
             You don't need a seminary degree to understand the Bible. You need
             the right{" "}
             <span className="text-[var(--color-summit)]">altitude.</span>
@@ -224,7 +224,7 @@ function ApproachSection() {
 
         <div className="mt-14 grid grid-cols-1 gap-14 lg:grid-cols-2 lg:gap-20">
           <div>
-            <h2 className="font-display text-4xl font-extrabold leading-[1.05] tracking-tight text-[var(--color-paper)] md:text-5xl">
+            <h2 className="h-section text-[var(--color-paper)]">
               We read Scripture like the{" "}
               <span className="text-[var(--color-summit-2)]">
                 evidence it is.
@@ -322,7 +322,7 @@ function StudyLibrarySection() {
             <p className="font-sans text-[11px] font-medium uppercase tracking-[0.28em] text-[var(--color-summit)]">
               The study library
             </p>
-            <h2 className="mt-6 font-display text-4xl font-extrabold leading-[1.05] tracking-tight text-[var(--color-ink)] md:text-5xl">
+            <h2 className="mt-6 h-section text-[var(--color-ink)]">
               Pick a book. Watch in order, start to finish.
             </h2>
           </div>
@@ -509,7 +509,7 @@ function MembershipSection() {
           <p className="font-sans text-[11px] font-medium uppercase tracking-[0.28em] text-[var(--color-summit)]">
             Membership
           </p>
-          <h2 className="mt-6 font-display text-4xl font-extrabold leading-[1.05] tracking-tight text-[var(--color-ink)] md:text-5xl">
+          <h2 className="mt-6 h-section text-[var(--color-ink)]">
             Watch everything free.{" "}
             <span className="text-[var(--color-summit)]">
               Support it if it feeds you.
@@ -624,7 +624,7 @@ function LanguagesSection() {
         <p className="font-sans text-[11px] font-medium uppercase tracking-[0.28em] text-[var(--color-summit-2)]">
           For every background and nation
         </p>
-        <h2 className="mt-6 font-display text-3xl font-extrabold leading-[1.1] tracking-tight text-[var(--color-paper)] md:text-4xl lg:text-5xl">
+        <h2 className="mt-6 h-section text-[var(--color-paper)]">
           The same study, translated — so language is never the barrier to
           understanding.
         </h2>
@@ -688,7 +688,7 @@ function AboutSection() {
 
           {/* Bio */}
           <div className="lg:col-span-3">
-            <h2 className="font-display text-4xl font-extrabold leading-[1.05] tracking-tight text-[var(--color-paper)] md:text-5xl">
+            <h2 className="h-section text-[var(--color-paper)]">
               Rev. William Fussell,{" "}
               <span className="text-[var(--color-summit-2)]">JD</span>
             </h2>
