@@ -83,13 +83,19 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         content:
           "A wide-angle view of the Word of God — studied with clarity, context, and a legally trained mind.",
       },
-      { property: "og:title", content: "Elevation Bible Study" },
+      { property: "og:title", content: "Elevation Bible Study — The Thousand-Foot View" },
       {
         property: "og:description",
         content: "The Thousand-Foot View — a membership Bible-study platform.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
+      { name: "twitter:title", content: "Elevation Bible Study — The Thousand-Foot View" },
+      { name: "description", content: "Elevation Bible Study is a membership platform for in-depth Bible study." },
+      { property: "og:description", content: "Elevation Bible Study is a membership platform for in-depth Bible study." },
+      { name: "twitter:description", content: "Elevation Bible Study is a membership platform for in-depth Bible study." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/6ad37208-e8cf-4625-8d41-7a9b9a5ee3e4/id-preview-c9331a57--e1d76fa7-9104-4336-b7d5-0e251e268dbd.lovable.app-1782195715015.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/6ad37208-e8cf-4625-8d41-7a9b9a5ee3e4/id-preview-c9331a57--e1d76fa7-9104-4336-b7d5-0e251e268dbd.lovable.app-1782195715015.png" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
