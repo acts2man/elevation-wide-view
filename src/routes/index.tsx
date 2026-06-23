@@ -106,6 +106,9 @@ function Home() {
             </div>
           </div>
         </section>
+
+        <WhyExistsSection />
+        <ApproachSection />
       </main>
       <SiteFooter />
     </div>
