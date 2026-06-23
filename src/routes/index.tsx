@@ -68,21 +68,42 @@ function Home() {
           <div className="relative mx-auto grid w-full max-w-7xl grid-cols-1 gap-12 px-5 py-20 md:py-28 lg:grid-cols-5 lg:gap-16 lg:px-8">
             {/* Right card — appears first on mobile, right column on desktop */}
             <div className="order-1 lg:order-2 lg:col-span-2">
-              <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-6 shadow-2xl backdrop-blur-md sm:p-8">
-                <div className="flex items-center justify-center rounded-xl bg-[var(--color-ink-2)]/60 px-6 py-10">
-                  <VennMark
-                    className="h-44 w-auto text-[var(--color-paper)]"
-                    labelColor="rgba(247,246,242,0.55)"
-                  />
-                </div>
-                <div className="mt-6 grid grid-cols-3 gap-3 border-t border-white/10 pt-6">
+              <div
+                style={{
+                  border: "1px solid rgba(247,246,242,0.16)",
+                  borderRadius: "18px",
+                  padding: "30px",
+                  background:
+                    "linear-gradient(180deg, rgba(247,246,242,0.04), rgba(247,246,242,0.01))",
+                }}
+              >
+                <VennMark className="block w-full h-auto" />
+                <div
+                  className="mt-7 grid grid-cols-3 gap-3 pt-6"
+                  style={{ borderTop: "1px solid rgba(247,246,242,0.16)" }}
+                >
                   {STATS.map((s) => (
                     <div key={s.label} className="text-center">
-                      <div className="font-display text-2xl font-extrabold tracking-tight text-[var(--color-paper)] sm:text-3xl">
-                        {s.value}
-                      </div>
-                      <div className="mt-1 text-[10px] font-medium uppercase tracking-[0.18em] text-[var(--color-brand-muted)]">
+                      <div
+                        className="font-medium uppercase"
+                        style={{
+                          fontSize: "11px",
+                          letterSpacing: "0.16em",
+                          color: "#7e8085",
+                        }}
+                      >
                         {s.label}
+                      </div>
+                      <div
+                        className="font-display mt-2 whitespace-nowrap"
+                        style={{
+                          fontWeight: 800,
+                          color: "#f7f6f2",
+                          fontSize: s.value.includes("·") ? "18px" : "22px",
+                          letterSpacing: "-0.01em",
+                        }}
+                      >
+                        {s.value}
                       </div>
                     </div>
                   ))}

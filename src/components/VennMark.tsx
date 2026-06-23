@@ -1,59 +1,55 @@
 interface VennMarkProps {
   className?: string;
-  stroke?: string;
-  labelColor?: string;
-  overlapColor?: string;
 }
 
-export function VennMark({
-  className,
-  stroke = "currentColor",
-  labelColor = "currentColor",
-  overlapColor = "var(--color-summit-2)",
-}: VennMarkProps) {
-  const letters = ["J", "E", "S", "U", "S"];
+export function VennMark({ className }: VennMarkProps) {
   return (
     <svg
-      viewBox="0 0 240 160"
-      fill="none"
+      viewBox="0 0 320 180"
+      width="100%"
+      height="auto"
+      xmlns="http://www.w3.org/2000/svg"
       className={className}
-      aria-label="God and Man overlap in Jesus"
       role="img"
+      aria-label="God and Man overlap in Jesus"
     >
-      <circle cx="90" cy="80" r="62" stroke={stroke} strokeWidth="1.25" />
-      <circle cx="150" cy="80" r="62" stroke={stroke} strokeWidth="1.25" />
-      <text
-        x="58"
-        y="22"
-        fill={labelColor}
-        fontSize="10"
-        fontFamily="var(--font-sans)"
-        letterSpacing="0.18em"
-      >
-        GOD
-      </text>
-      <text
-        x="166"
-        y="22"
-        fill={labelColor}
-        fontSize="10"
-        fontFamily="var(--font-sans)"
-        letterSpacing="0.18em"
-      >
-        MAN
-      </text>
+      <g fill="none" stroke="rgba(247,246,242,0.85)" strokeWidth="2">
+        <circle cx="118" cy="90" r="72" />
+        <circle cx="202" cy="90" r="72" />
+      </g>
       <g
-        fill={overlapColor}
-        fontFamily="var(--font-display)"
-        fontWeight={700}
-        fontSize="13"
+        fontFamily="'Bricolage Grotesque',sans-serif"
+        fontWeight="700"
+        fill="#f7f6f2"
+      >
+        <text x="78" y="97" fontSize="20" textAnchor="middle">
+          GOD
+        </text>
+        <text x="242" y="97" fontSize="20" textAnchor="middle">
+          MAN
+        </text>
+      </g>
+      <g
+        fontFamily="'Bricolage Grotesque',sans-serif"
+        fontWeight="700"
+        fill="#5e8b8f"
         textAnchor="middle"
       >
-        {letters.map((l, i) => (
-          <text key={i} x="120" y={56 + i * 12.5} letterSpacing="0.12em">
-            {l}
-          </text>
-        ))}
+        <text x="160" y="58" fontSize="13">
+          J
+        </text>
+        <text x="160" y="74" fontSize="13">
+          E
+        </text>
+        <text x="160" y="90" fontSize="13">
+          S
+        </text>
+        <text x="160" y="106" fontSize="13">
+          U
+        </text>
+        <text x="160" y="122" fontSize="13">
+          S
+        </text>
       </g>
     </svg>
   );
