@@ -69,9 +69,11 @@ export function SiteNav() {
           />
           <aside className="absolute right-0 top-0 flex h-full w-full max-w-sm flex-col bg-[var(--color-paper)]">
             <div className="flex items-center justify-between border-b border-[var(--color-line)] p-5">
-              <span className="font-display text-base font-bold text-[var(--color-ink)]">
-                Elevation Bible Study
-              </span>
+              <img
+                src={logoAsset.url}
+                alt="Elevation Bible Study"
+                className="h-10 w-auto"
+              />
               <button
                 onClick={() => setOpen(false)}
                 aria-label="Close menu"
