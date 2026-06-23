@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Headphones, Youtube, Check } from "lucide-react";
 import { SiteNav } from "@/components/SiteNav";
 import { SiteFooter } from "@/components/SiteFooter";
 import { ContourBackdrop } from "@/components/ContourBackdrop";
