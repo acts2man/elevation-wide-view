@@ -89,3 +89,57 @@
     font-weight: 700;
   }
 }
+
+@utility h-hero {
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1.02;
+  font-size: clamp(40px, 6vw, 76px);
+}
+
+@utility h-section {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.022em;
+  line-height: 1.06;
+  font-size: clamp(28px, 4vw, 42px);
+}
+
+@utility reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity 700ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@utility card-lift {
+  transition:
+    transform 300ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 300ms ease,
+    box-shadow 300ms ease;
+}
+
+.card-lift:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 18px 40px -24px rgba(17, 19, 21, 0.35);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .card-lift {
+    transition: none !important;
+    transform: none !important;
+  }
+  .reveal {
+    opacity: 1 !important;
+  }
+}
+

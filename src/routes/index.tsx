@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { Headphones, Youtube, Check } from "lucide-react";
 import { SiteNav } from "@/components/SiteNav";
@@ -31,6 +32,28 @@ const STATS = [
 ];
 
 function Home() {
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const els = document.querySelectorAll<HTMLElement>(".reveal");
+    if (!("IntersectionObserver" in window)) {
+      els.forEach((el) => el.classList.add("is-visible"));
+      return;
+    }
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+            io.unobserve(entry.target);
+          }
+        });
+      },
+      { rootMargin: "0px 0px -10% 0px", threshold: 0.08 },
+    );
+    els.forEach((el) => io.observe(el));
+    return () => io.disconnect();
+  }, []);
+
   return (
     <div className="flex min-h-screen flex-col bg-[var(--color-paper)]">
       <SiteNav />
@@ -72,7 +95,7 @@ function Home() {
               <p className="font-sans text-[11px] font-medium uppercase tracking-[0.28em] text-[var(--color-summit-2)]">
                 Elevation Bible Study · The Thousand-Foot View
               </p>
-              <h1 className="mt-6 font-display text-5xl font-extrabold leading-[1.02] tracking-tight text-[var(--color-paper)] md:text-6xl lg:text-7xl">
+              <h1 className="reveal mt-6 h-hero text-[var(--color-paper)]">
                 Step back, and Scripture{" "}
                 <span className="text-[var(--color-summit-2)]">
                   snaps into focus.
@@ -88,13 +111,13 @@ function Home() {
               <div className="mt-10 flex flex-wrap items-center gap-3">
                 <a
                   href="/"
-                  className="inline-flex items-center gap-2 rounded-md bg-[var(--color-summit)] px-6 py-3.5 text-sm font-semibold text-[var(--color-paper)] transition-colors hover:bg-[var(--color-summit-2)]"
+                  className="inline-flex w-fit items-center gap-2 whitespace-nowrap rounded-md bg-[var(--color-summit)] px-6 py-3.5 text-sm font-semibold text-[var(--color-paper)] transition-colors hover:bg-[var(--color-summit-2)]"
                 >
                   Begin the study — free <span aria-hidden>→</span>
                 </a>
                 <a
                   href="/"
-                  className="inline-flex items-center gap-2 rounded-md border border-white/15 px-6 py-3.5 text-sm font-medium text-[var(--color-paper)] transition-colors hover:bg-white/5"
+                  className="inline-flex w-fit items-center gap-2 whitespace-nowrap rounded-md border border-white/15 px-6 py-3.5 text-sm font-medium text-[var(--color-paper)] transition-colors hover:bg-white/5"
                 >
                   <span aria-hidden>▶</span> Watch the 2-min trailer
                 </a>
@@ -147,18 +170,18 @@ function WhyExistsSection() {
           <p className="font-sans text-[11px] font-medium uppercase tracking-[0.28em] text-[var(--color-summit)]">
             Why this study exists
           </p>
-          <h2 className="mt-6 font-display text-4xl font-extrabold leading-[1.05] tracking-tight text-[var(--color-ink)] md:text-5xl lg:text-6xl">
+          <h2 className="reveal mt-6 h-section text-[var(--color-ink)]">
             You don't need a seminary degree to understand the Bible. You need
             the right{" "}
             <span className="text-[var(--color-summit)]">altitude.</span>
           </h2>
         </div>
 
-        <div className="mt-16 grid grid-cols-1 gap-6 md:grid-cols-3 md:gap-8">
+        <div className="reveal mt-16 grid grid-cols-1 gap-6 md:grid-cols-3 md:gap-8">
           {PAINS.map((c) => (
             <div
               key={c.outcome}
-              className="flex flex-col rounded-2xl border border-[var(--color-line)] bg-[var(--color-paper-2)]/40 p-7"
+              className="card-lift flex flex-col rounded-2xl border border-[var(--color-line)] bg-[var(--color-paper-2)]/40 p-7"
             >
               <p className="font-scripture text-base italic text-[var(--color-brand-muted)] line-through decoration-[var(--color-brand-muted)]/60">
                 “{c.pain}”
@@ -222,9 +245,9 @@ function ApproachSection() {
         </p>
         <div className="mt-6 h-px w-full bg-white/10" />
 
-        <div className="mt-14 grid grid-cols-1 gap-14 lg:grid-cols-2 lg:gap-20">
+        <div className="reveal mt-14 grid grid-cols-1 gap-14 lg:grid-cols-2 lg:gap-20">
           <div>
-            <h2 className="font-display text-4xl font-extrabold leading-[1.05] tracking-tight text-[var(--color-paper)] md:text-5xl">
+            <h2 className="reveal h-section text-[var(--color-paper)]">
               We read Scripture like the{" "}
               <span className="text-[var(--color-summit-2)]">
                 evidence it is.
@@ -322,7 +345,7 @@ function StudyLibrarySection() {
             <p className="font-sans text-[11px] font-medium uppercase tracking-[0.28em] text-[var(--color-summit)]">
               The study library
             </p>
-            <h2 className="mt-6 font-display text-4xl font-extrabold leading-[1.05] tracking-tight text-[var(--color-ink)] md:text-5xl">
+            <h2 className="reveal mt-6 h-section text-[var(--color-ink)]">
               Pick a book. Watch in order, start to finish.
             </h2>
           </div>
@@ -332,11 +355,11 @@ function StudyLibrarySection() {
           </p>
         </div>
 
-        <div className="mt-14 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="reveal mt-14 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {STUDIES.map((s) => (
             <article
               key={s.title}
-              className="group flex flex-col overflow-hidden rounded-2xl border border-[var(--color-line)] bg-[var(--color-paper)] transition-colors hover:border-[var(--color-summit)]/40"
+              className="card-lift group flex flex-col overflow-hidden rounded-2xl border border-[var(--color-line)] bg-[var(--color-paper)] hover:border-[var(--color-summit)]/40"
             >
               <div className="relative aspect-[16/10] overflow-hidden bg-[var(--color-ink)]">
                 <ContourBackdrop
@@ -415,13 +438,13 @@ function RevelationFeatured() {
         <div className="mt-8 flex flex-wrap items-center gap-3">
           <a
             href="/"
-            className="inline-flex items-center gap-2 rounded-md bg-[var(--color-summit)] px-6 py-3.5 text-sm font-semibold text-[var(--color-paper)] transition-colors hover:bg-[var(--color-summit-2)]"
+            className="inline-flex w-fit items-center gap-2 whitespace-nowrap rounded-md bg-[var(--color-summit)] px-6 py-3.5 text-sm font-semibold text-[var(--color-paper)] transition-colors hover:bg-[var(--color-summit-2)]"
           >
             Start the series
           </a>
           <a
             href="/"
-            className="inline-flex items-center gap-2 rounded-md border border-white/15 px-6 py-3.5 text-sm font-medium text-[var(--color-paper)] transition-colors hover:bg-white/5"
+            className="inline-flex w-fit items-center gap-2 whitespace-nowrap rounded-md border border-white/15 px-6 py-3.5 text-sm font-medium text-[var(--color-paper)] transition-colors hover:bg-white/5"
           >
             <span aria-hidden>▶</span> Watch the trailer
           </a>
@@ -454,7 +477,7 @@ function ListenWatchSection() {
         {cards.map(({ Icon, eyebrow, title, body, cta }) => (
           <div
             key={title}
-            className="flex items-start gap-5 rounded-2xl border border-[var(--color-line)] bg-[var(--color-paper-2)]/50 p-6 md:p-8"
+            className="card-lift flex items-start gap-5 rounded-2xl border border-[var(--color-line)] bg-[var(--color-paper-2)]/50 p-6 md:p-8"
           >
             <div className="flex h-14 w-14 flex-none items-center justify-center rounded-xl bg-[var(--color-ink)] text-[var(--color-summit-2)]">
               <Icon size={24} />
@@ -509,7 +532,7 @@ function MembershipSection() {
           <p className="font-sans text-[11px] font-medium uppercase tracking-[0.28em] text-[var(--color-summit)]">
             Membership
           </p>
-          <h2 className="mt-6 font-display text-4xl font-extrabold leading-[1.05] tracking-tight text-[var(--color-ink)] md:text-5xl">
+          <h2 className="reveal mt-6 h-section text-[var(--color-ink)]">
             Watch everything free.{" "}
             <span className="text-[var(--color-summit)]">
               Support it if it feeds you.
@@ -522,9 +545,9 @@ function MembershipSection() {
           </p>
         </div>
 
-        <div className="mt-14 grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-8">
+        <div className="reveal mt-14 grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-8">
           {/* Free */}
-          <div className="flex flex-col rounded-2xl border border-[var(--color-line)] bg-[var(--color-paper)] p-8 md:p-10">
+          <div className="card-lift flex flex-col rounded-2xl border border-[var(--color-line)] bg-[var(--color-paper)] p-8 md:p-10">
             <p className="font-sans text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--color-brand-muted)]">
               Free Account
             </p>
@@ -546,7 +569,7 @@ function MembershipSection() {
             </ul>
             <a
               href="/"
-              className="mt-10 inline-flex items-center justify-center rounded-md border border-[var(--color-ink)] px-6 py-3.5 text-sm font-semibold text-[var(--color-ink)] transition-colors hover:bg-[var(--color-ink)] hover:text-[var(--color-paper)]"
+              className="mt-10 inline-flex w-fit items-center justify-center gap-2 whitespace-nowrap rounded-md border border-[var(--color-ink)] px-6 py-3.5 text-sm font-semibold text-[var(--color-ink)] transition-colors hover:bg-[var(--color-ink)] hover:text-[var(--color-paper)]"
             >
               Create free account
             </a>
@@ -588,7 +611,7 @@ function MembershipSection() {
               </ul>
               <a
                 href="/"
-                className="mt-10 inline-flex items-center justify-center rounded-md bg-[var(--color-summit)] px-6 py-3.5 text-sm font-semibold text-[var(--color-paper)] transition-colors hover:bg-[var(--color-summit-2)]"
+                className="mt-10 inline-flex w-fit items-center justify-center gap-2 whitespace-nowrap rounded-md bg-[var(--color-summit)] px-6 py-3.5 text-sm font-semibold text-[var(--color-paper)] transition-colors hover:bg-[var(--color-summit-2)]"
               >
                 Become a supporter
               </a>
@@ -624,7 +647,7 @@ function LanguagesSection() {
         <p className="font-sans text-[11px] font-medium uppercase tracking-[0.28em] text-[var(--color-summit-2)]">
           For every background and nation
         </p>
-        <h2 className="mt-6 font-display text-3xl font-extrabold leading-[1.1] tracking-tight text-[var(--color-paper)] md:text-4xl lg:text-5xl">
+        <h2 className="reveal mt-6 h-section text-[var(--color-paper)]">
           The same study, translated — so language is never the barrier to
           understanding.
         </h2>
@@ -688,7 +711,7 @@ function AboutSection() {
 
           {/* Bio */}
           <div className="lg:col-span-3">
-            <h2 className="font-display text-4xl font-extrabold leading-[1.05] tracking-tight text-[var(--color-paper)] md:text-5xl">
+            <h2 className="reveal h-section text-[var(--color-paper)]">
               Rev. William Fussell,{" "}
               <span className="text-[var(--color-summit-2)]">JD</span>
             </h2>

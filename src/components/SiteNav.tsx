@@ -46,7 +46,7 @@ export function SiteNav() {
         </div>
 
         <button
-          className="flex h-9 w-9 items-center justify-center lg:hidden"
+          className="flex h-11 w-11 items-center justify-center lg:hidden"
           onClick={() => setOpen(true)}
           aria-label="Open menu"
         >
