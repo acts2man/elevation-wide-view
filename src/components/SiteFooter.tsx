@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { VennMark } from "./VennMark";
+import logoAsset from "@/assets/elevation-logo.png.asset.json";
 
 export function SiteFooter() {
   const [email, setEmail] = useState("");
@@ -9,17 +9,11 @@ export function SiteFooter() {
       <div className="mx-auto w-full max-w-7xl px-5 py-16 lg:px-8 lg:py-20">
         <div className="grid gap-12 lg:grid-cols-[1.4fr_1fr_1fr_1.2fr]">
           <div className="space-y-5">
-            <div className="flex items-center gap-3">
-              <VennMark
-                className="h-10 w-16"
-                stroke="rgba(247,246,242,0.7)"
-                labelColor="rgba(247,246,242,0.55)"
-                overlapColor="var(--color-summit-2)"
-              />
-              <span className="font-display text-lg font-bold">
-                Elevation Bible Study
-              </span>
-            </div>
+            <img
+              src={logoAsset.url}
+              alt="Elevation Bible Study · Thousand Foot View"
+              className="h-14 w-auto brightness-0 invert"
+            />
             <p className="max-w-sm text-sm leading-relaxed text-[rgba(247,246,242,0.7)]">
               A wide-angle view of the Word of God — studied with clarity,
               context, and a legally trained mind.
