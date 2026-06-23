@@ -13,6 +13,7 @@ const now = () => new Date().toISOString();
 
 function seed(): MockStore {
   const profiles: Profile[] = [
+    { id: "p_troy", full_name: "Troy", email: "Troy@reputationguardians.net", role: "admin", created_at: now() },
     { id: "p_admin", full_name: "Pastor Admin", email: "admin@elevation.test", role: "admin", created_at: now() },
     { id: "p_member1", full_name: "Sarah Johnson", email: "sarah@example.com", role: "member", created_at: now() },
     { id: "p_member2", full_name: "Marcus Lee", email: "marcus@example.com", role: "member", created_at: now() },
