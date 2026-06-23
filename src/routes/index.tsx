@@ -430,3 +430,300 @@ function RevelationFeatured() {
     </div>
   );
 }
+
+function ListenWatchSection() {
+  const cards = [
+    {
+      Icon: Headphones,
+      eyebrow: "Audio",
+      title: "Prefer to listen?",
+      body: "Every lesson is released as a podcast — drive, walk, or wash dishes while you study.",
+      cta: "Subscribe to the podcast →",
+    },
+    {
+      Icon: Youtube,
+      eyebrow: "Video",
+      title: "Also on YouTube",
+      body: "Watch free on YouTube, then come back here to follow the series in order.",
+      cta: "Open YouTube channel →",
+    },
+  ];
+  return (
+    <section className="bg-[var(--color-paper)] py-20 md:py-24">
+      <div className="mx-auto grid w-full max-w-7xl grid-cols-1 gap-6 px-5 md:grid-cols-2 md:gap-8 lg:px-8">
+        {cards.map(({ Icon, eyebrow, title, body, cta }) => (
+          <div
+            key={title}
+            className="flex items-start gap-5 rounded-2xl border border-[var(--color-line)] bg-[var(--color-paper-2)]/50 p-6 md:p-8"
+          >
+            <div className="flex h-14 w-14 flex-none items-center justify-center rounded-xl bg-[var(--color-ink)] text-[var(--color-summit-2)]">
+              <Icon size={24} />
+            </div>
+            <div className="flex-1">
+              <p className="font-sans text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--color-summit)]">
+                {eyebrow}
+              </p>
+              <h3 className="mt-2 font-display text-xl font-bold leading-tight tracking-tight text-[var(--color-ink)]">
+                {title}
+              </h3>
+              <p className="mt-2 text-[14px] leading-relaxed text-[var(--color-graphite)]">
+                {body}
+              </p>
+              <a
+                href="/"
+                className="mt-4 inline-block font-sans text-sm font-medium text-[var(--color-summit)] hover:text-[var(--color-summit-ink)]"
+              >
+                {cta}
+              </a>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+const FREE_FEATURES = [
+  "Full video library, in order",
+  "The complete Revelation series",
+  "Podcast audio of every lesson",
+  "Available in English, Spanish & German",
+];
+
+const SUPPORTER_FEATURES = [
+  "Everything in the free account",
+  "Downloadable lesson outlines",
+  "Early access — a week ahead of release",
+  "Members-only deep-dive sessions",
+  "Priority on questions & responses",
+];
+
+function MembershipSection() {
+  return (
+    <section
+      id="join"
+      className="bg-[var(--color-paper-2)] py-24 md:py-32"
+    >
+      <div className="mx-auto w-full max-w-6xl px-5 lg:px-8">
+        <div className="max-w-2xl">
+          <p className="font-sans text-[11px] font-medium uppercase tracking-[0.28em] text-[var(--color-summit)]">
+            Membership
+          </p>
+          <h2 className="mt-6 font-display text-4xl font-extrabold leading-[1.05] tracking-tight text-[var(--color-ink)] md:text-5xl">
+            Watch everything free.{" "}
+            <span className="text-[var(--color-summit)]">
+              Support it if it feeds you.
+            </span>
+          </h2>
+          <p className="mt-6 text-[17px] leading-relaxed text-[var(--color-graphite)]">
+            No one has to pay to learn. Create a free account and the library
+            is yours. If the teaching is worth something to you, become a
+            supporter — it's what keeps new lessons coming.
+          </p>
+        </div>
+
+        <div className="mt-14 grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-8">
+          {/* Free */}
+          <div className="flex flex-col rounded-2xl border border-[var(--color-line)] bg-[var(--color-paper)] p-8 md:p-10">
+            <p className="font-sans text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--color-brand-muted)]">
+              Free Account
+            </p>
+            <div className="mt-4 flex items-baseline gap-2">
+              <span className="font-display text-5xl font-extrabold tracking-tight text-[var(--color-ink)]">
+                $0
+              </span>
+            </div>
+            <p className="mt-3 text-sm text-[var(--color-graphite)]">
+              All you need is a name and email.
+            </p>
+            <ul className="mt-8 flex flex-col gap-3">
+              {FREE_FEATURES.map((f) => (
+                <li key={f} className="flex items-start gap-3 text-[15px] text-[var(--color-ink)]">
+                  <Check size={18} className="mt-0.5 flex-none text-[var(--color-summit)]" />
+                  <span>{f}</span>
+                </li>
+              ))}
+            </ul>
+            <a
+              href="/"
+              className="mt-10 inline-flex items-center justify-center rounded-md border border-[var(--color-ink)] px-6 py-3.5 text-sm font-semibold text-[var(--color-ink)] transition-colors hover:bg-[var(--color-ink)] hover:text-[var(--color-paper)]"
+            >
+              Create free account
+            </a>
+          </div>
+
+          {/* Supporter (dark) */}
+          <div className="relative flex flex-col overflow-hidden rounded-2xl border border-[var(--color-summit-2)]/30 bg-[var(--color-ink)] p-8 text-[var(--color-paper)] md:p-10">
+            <ContourBackdrop
+              className="pointer-events-none absolute inset-0 h-full w-full opacity-60"
+              variant="dark"
+            />
+            <div className="relative">
+              <div className="flex items-center justify-between">
+                <p className="font-sans text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--color-summit-2)]">
+                  Partner in the Work
+                </p>
+                <span className="rounded-full bg-[var(--color-summit)] px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--color-paper)]">
+                  Supporter
+                </span>
+              </div>
+              <div className="mt-4 flex items-baseline gap-2">
+                <span className="font-display text-5xl font-extrabold tracking-tight text-[var(--color-paper)]">
+                  $7
+                </span>
+                <span className="text-sm text-[var(--color-paper-2)]/70">
+                  / month
+                </span>
+              </div>
+              <p className="mt-3 text-sm text-[var(--color-paper-2)]/75">
+                Less than a hamburger — and it keeps the lessons coming.
+              </p>
+              <ul className="mt-8 flex flex-col gap-3">
+                {SUPPORTER_FEATURES.map((f) => (
+                  <li key={f} className="flex items-start gap-3 text-[15px] text-[var(--color-paper)]">
+                    <Check size={18} className="mt-0.5 flex-none text-[var(--color-summit-2)]" />
+                    <span>{f}</span>
+                  </li>
+                ))}
+              </ul>
+              <a
+                href="/"
+                className="mt-10 inline-flex items-center justify-center rounded-md bg-[var(--color-summit)] px-6 py-3.5 text-sm font-semibold text-[var(--color-paper)] transition-colors hover:bg-[var(--color-summit-2)]"
+              >
+                Become a supporter
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <p className="mt-12 max-w-3xl text-sm leading-relaxed text-[var(--color-brand-muted)]">
+          A note on support: contributions are not tax-deductible, and that's
+          on purpose. Staying independent of 501(c)(3) restrictions keeps the
+          teaching free to say what Scripture says.
+        </p>
+        <p className="mt-4 font-scripture text-base italic text-[var(--color-graphite)]">
+          “The labourer is worthy of his reward.”
+        </p>
+      </div>
+    </section>
+  );
+}
+
+const LANGUAGES = [
+  { label: "English", active: true },
+  { label: "Español", active: true },
+  { label: "Deutsch", active: true },
+  { label: "اردو · in progress", active: false },
+  { label: "پښتو · in progress", active: false },
+];
+
+function LanguagesSection() {
+  return (
+    <section className="bg-[var(--color-ink)] py-20 text-[var(--color-paper)] md:py-24">
+      <div className="mx-auto w-full max-w-4xl px-5 text-center lg:px-8">
+        <p className="font-sans text-[11px] font-medium uppercase tracking-[0.28em] text-[var(--color-summit-2)]">
+          For every background and nation
+        </p>
+        <h2 className="mt-6 font-display text-3xl font-extrabold leading-[1.1] tracking-tight text-[var(--color-paper)] md:text-4xl lg:text-5xl">
+          The same study, translated — so language is never the barrier to
+          understanding.
+        </h2>
+        <div className="mt-10 flex flex-wrap justify-center gap-3">
+          {LANGUAGES.map((l) => (
+            <span
+              key={l.label}
+              className={
+                l.active
+                  ? "rounded-full border border-white/15 bg-white/5 px-5 py-2.5 text-sm font-medium text-[var(--color-paper)]"
+                  : "rounded-full border border-dashed border-white/15 px-5 py-2.5 text-sm font-medium text-[var(--color-paper-2)]/45"
+              }
+            >
+              {l.label}
+            </span>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+const CREDENTIALS = [
+  "Texas Bible College",
+  "JD · McGeorge School of Law",
+  "U.S. Army · Combat Medic",
+  "Missionary · Poland & Chile",
+  "Fluent EN · ES · DE",
+  "30+ years teaching",
+];
+
+function AboutSection() {
+  return (
+    <section
+      id="about"
+      className="bg-[var(--color-ink-2)] py-24 text-[var(--color-paper)] md:py-32"
+    >
+      <div className="mx-auto w-full max-w-7xl px-5 lg:px-8">
+        <p className="font-sans text-[11px] font-medium uppercase tracking-[0.28em] text-[var(--color-summit-2)]">
+          The teacher
+        </p>
+        <div className="mt-6 h-px w-full bg-white/10" />
+
+        <div className="mt-14 grid grid-cols-1 gap-12 lg:grid-cols-5 lg:gap-16">
+          {/* Portrait */}
+          <div className="lg:col-span-2">
+            <figure className="relative overflow-hidden rounded-2xl border border-white/10 bg-[var(--color-ink)]">
+              <div className="relative aspect-[4/5]">
+                <ContourBackdrop
+                  className="absolute inset-0 h-full w-full"
+                  variant="dark"
+                />
+                <div className="absolute inset-0 flex items-end p-6">
+                  <span className="rounded-full border border-white/15 bg-white/5 px-3 py-1 text-[10px] font-medium uppercase tracking-[0.18em] text-[var(--color-paper-2)]/70 backdrop-blur">
+                    Portrait of Rev. Fussell · photo coming soon
+                  </span>
+                </div>
+              </div>
+            </figure>
+          </div>
+
+          {/* Bio */}
+          <div className="lg:col-span-3">
+            <h2 className="font-display text-4xl font-extrabold leading-[1.05] tracking-tight text-[var(--color-paper)] md:text-5xl">
+              Rev. William Fussell,{" "}
+              <span className="text-[var(--color-summit-2)]">JD</span>
+            </h2>
+            <div className="mt-8 flex flex-col gap-6 text-[16px] leading-relaxed text-[var(--color-paper-2)]/80">
+              <p>
+                Pastor, missionary, and Bible teacher with 30+ years in
+                ministry — and a teacher at heart. After serving as a combat
+                medic, planting churches in Poland, and teaching the New
+                Testament across Chile, the passion has always been the same:
+                helping ordinary people open their Bible and actually
+                understand it.
+              </p>
+              <p>
+                A Juris Doctor in business and taxation trained him to read a
+                text carefully, weigh the evidence, and separate what's proven
+                from what's speculation — the same discipline he brings to
+                Scripture. The goal of Elevation is simple: make the Word
+                understandable, accessible, and clear for people from every
+                background.
+              </p>
+            </div>
+
+            <div className="mt-10 flex flex-wrap gap-2.5">
+              {CREDENTIALS.map((c) => (
+                <span
+                  key={c}
+                  className="rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-xs font-medium text-[var(--color-paper-2)]/85"
+                >
+                  {c}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
