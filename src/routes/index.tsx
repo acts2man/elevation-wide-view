@@ -111,6 +111,10 @@ function Home() {
         <WhyExistsSection />
         <ApproachSection />
         <StudyLibrarySection />
+        <ListenWatchSection />
+        <MembershipSection />
+        <LanguagesSection />
+        <AboutSection />
       </main>
       <SiteFooter />
     </div>
