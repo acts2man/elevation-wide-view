@@ -18,6 +18,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as WatchLessonIdRouteImport } from './routes/watch.$lessonId'
 import { Route as SeriesSlugRouteImport } from './routes/series.$slug'
 import { Route as AdminSeriesRouteImport } from './routes/admin.series'
+import { Route as AdminMembersRouteImport } from './routes/admin.members'
 import { Route as AdminSeriesIdRouteImport } from './routes/admin.series.$id'
 
 const SignupRoute = SignupRouteImport.update({
@@ -65,6 +66,11 @@ const AdminSeriesRoute = AdminSeriesRouteImport.update({
   path: '/series',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminMembersRoute = AdminMembersRouteImport.update({
+  id: '/members',
+  path: '/members',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminSeriesIdRoute = AdminSeriesIdRouteImport.update({
   id: '/$id',
   path: '/$id',
@@ -78,6 +84,7 @@ export interface FileRoutesByFullPath {
   '/library': typeof LibraryRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
+  '/admin/members': typeof AdminMembersRoute
   '/admin/series': typeof AdminSeriesRouteWithChildren
   '/series/$slug': typeof SeriesSlugRoute
   '/watch/$lessonId': typeof WatchLessonIdRoute
@@ -90,6 +97,7 @@ export interface FileRoutesByTo {
   '/library': typeof LibraryRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
+  '/admin/members': typeof AdminMembersRoute
   '/admin/series': typeof AdminSeriesRouteWithChildren
   '/series/$slug': typeof SeriesSlugRoute
   '/watch/$lessonId': typeof WatchLessonIdRoute
@@ -103,6 +111,7 @@ export interface FileRoutesById {
   '/library': typeof LibraryRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
+  '/admin/members': typeof AdminMembersRoute
   '/admin/series': typeof AdminSeriesRouteWithChildren
   '/series/$slug': typeof SeriesSlugRoute
   '/watch/$lessonId': typeof WatchLessonIdRoute
@@ -117,6 +126,7 @@ export interface FileRouteTypes {
     | '/library'
     | '/login'
     | '/signup'
+    | '/admin/members'
     | '/admin/series'
     | '/series/$slug'
     | '/watch/$lessonId'
@@ -129,6 +139,7 @@ export interface FileRouteTypes {
     | '/library'
     | '/login'
     | '/signup'
+    | '/admin/members'
     | '/admin/series'
     | '/series/$slug'
     | '/watch/$lessonId'
@@ -141,6 +152,7 @@ export interface FileRouteTypes {
     | '/library'
     | '/login'
     | '/signup'
+    | '/admin/members'
     | '/admin/series'
     | '/series/$slug'
     | '/watch/$lessonId'
@@ -223,6 +235,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminSeriesRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/members': {
+      id: '/admin/members'
+      path: '/members'
+      fullPath: '/admin/members'
+      preLoaderRoute: typeof AdminMembersRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/series/$id': {
       id: '/admin/series/$id'
       path: '/$id'
@@ -246,10 +265,12 @@ const AdminSeriesRouteWithChildren = AdminSeriesRoute._addFileChildren(
 )
 
 interface AdminRouteChildren {
+  AdminMembersRoute: typeof AdminMembersRoute
   AdminSeriesRoute: typeof AdminSeriesRouteWithChildren
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
+  AdminMembersRoute: AdminMembersRoute,
   AdminSeriesRoute: AdminSeriesRouteWithChildren,
 }
 
