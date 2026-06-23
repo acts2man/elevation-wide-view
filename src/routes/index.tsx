@@ -114,3 +114,150 @@ function Home() {
     </div>
   );
 }
+
+const PAINS = [
+  {
+    pain: "I get lost in the details.",
+    outcome: "See how every book connects.",
+    body: "Each book has one overarching theme. Once you see it, individual passages stay in context — and they make sense.",
+  },
+  {
+    pain: "End-times debates lose me.",
+    outcome: "Watch prophecy fall into order.",
+    body: "Lay every passage out in sequence and the puzzle snaps together. No internet speculation — just the text, rightly divided.",
+  },
+  {
+    pain: "My faith feels shakeable.",
+    outcome: "Build a foundation that holds.",
+    body: "When you understand what God is doing and why, you're not easily moved. Clarity drives you closer to Him, not further.",
+  },
+];
+
+function WhyExistsSection() {
+  return (
+    <section className="relative bg-[var(--color-paper)] py-24 md:py-32">
+      <div className="mx-auto w-full max-w-7xl px-5 lg:px-8">
+        <div className="max-w-4xl">
+          <p className="font-sans text-[11px] font-medium uppercase tracking-[0.28em] text-[var(--color-summit)]">
+            Why this study exists
+          </p>
+          <h2 className="mt-6 font-display text-4xl font-extrabold leading-[1.05] tracking-tight text-[var(--color-ink)] md:text-5xl lg:text-6xl">
+            You don't need a seminary degree to understand the Bible. You need
+            the right{" "}
+            <span className="text-[var(--color-summit)]">altitude.</span>
+          </h2>
+        </div>
+
+        <div className="mt-16 grid grid-cols-1 gap-6 md:grid-cols-3 md:gap-8">
+          {PAINS.map((c) => (
+            <div
+              key={c.outcome}
+              className="flex flex-col rounded-2xl border border-[var(--color-line)] bg-[var(--color-paper-2)]/40 p-7"
+            >
+              <p className="font-scripture text-base italic text-[var(--color-brand-muted)] line-through decoration-[var(--color-brand-muted)]/60">
+                “{c.pain}”
+              </p>
+              <p className="mt-6 font-sans text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--color-summit)]">
+                Instead, you'll
+              </p>
+              <h3 className="mt-3 font-display text-2xl font-bold leading-tight tracking-tight text-[var(--color-ink)]">
+                {c.outcome}
+              </h3>
+              <p className="mt-4 text-[15px] leading-relaxed text-[var(--color-graphite)]">
+                {c.body}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+const PILLARS = [
+  {
+    n: "01",
+    title: "Context first",
+    body: "Read each passage inside the argument it belongs to, not as a stand-alone fragment.",
+  },
+  {
+    n: "02",
+    title: "Proper order of events",
+    body: "Lay the timeline out in sequence and the bigger picture becomes clear.",
+  },
+  {
+    n: "03",
+    title: "Scripture with Scripture",
+    body: "Let the Bible interpret itself before reaching for outside theory.",
+  },
+  {
+    n: "04",
+    title: "History & culture",
+    body: "Understand who was being written to, and why it mattered then.",
+  },
+  {
+    n: "05",
+    title: "Original language",
+    body: "Go to the Greek and Hebrew where the wording actually changes the meaning.",
+  },
+  {
+    n: "06",
+    title: "Teaching vs. speculation",
+    body: "Where something is uncertain, we say so plainly. Clarity over sensationalism.",
+  },
+];
+
+function ApproachSection() {
+  return (
+    <section className="relative overflow-hidden bg-[var(--color-ink)] py-24 text-[var(--color-paper)] md:py-32">
+      <div className="mx-auto w-full max-w-7xl px-5 lg:px-8">
+        <p className="font-sans text-[11px] font-medium uppercase tracking-[0.28em] text-[var(--color-summit-2)]">
+          Our Approach · A Legally Trained Mind
+        </p>
+        <div className="mt-6 h-px w-full bg-white/10" />
+
+        <div className="mt-14 grid grid-cols-1 gap-14 lg:grid-cols-2 lg:gap-20">
+          <div>
+            <h2 className="font-display text-4xl font-extrabold leading-[1.05] tracking-tight text-[var(--color-paper)] md:text-5xl">
+              We read Scripture like the{" "}
+              <span className="text-[var(--color-summit-2)]">
+                evidence it is.
+              </span>
+            </h2>
+            <p className="mt-8 max-w-lg text-[17px] leading-relaxed text-[var(--color-paper-2)]/80">
+              You may not agree with every conclusion — and that's fine. What
+              matters is that you can see exactly how each one was reached,
+              using the same plain rules of interpretation. Open your Bible and
+              check the work.
+            </p>
+            <a
+              href="/"
+              className="mt-10 inline-flex items-center gap-2 border-b border-[var(--color-summit-2)]/60 pb-1 font-sans text-sm font-medium text-[var(--color-summit-2)] transition-colors hover:text-[var(--color-paper)] hover:border-[var(--color-paper)]"
+            >
+              Start with Interpretation 101 <span aria-hidden>→</span>
+            </a>
+          </div>
+
+          <div className="grid grid-cols-1 gap-px overflow-hidden rounded-2xl border border-white/10 bg-white/10 sm:grid-cols-2">
+            {PILLARS.map((p) => (
+              <div
+                key={p.n}
+                className="flex flex-col gap-3 bg-[var(--color-ink)] p-7"
+              >
+                <span className="font-display text-xs font-bold tracking-[0.18em] text-[var(--color-summit-2)]">
+                  {p.n}
+                </span>
+                <h3 className="font-display text-lg font-bold leading-snug tracking-tight text-[var(--color-paper)]">
+                  {p.title}
+                </h3>
+                <p className="text-[14px] leading-relaxed text-[var(--color-paper-2)]/70">
+                  {p.body}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
