@@ -88,13 +88,13 @@ function Home() {
               <div className="mt-10 flex flex-wrap items-center gap-3">
                 <a
                   href="/"
-                  className="inline-flex items-center gap-2 rounded-md bg-[var(--color-summit)] px-6 py-3.5 text-sm font-semibold text-[var(--color-paper)] transition-colors hover:bg-[var(--color-summit-2)]"
+                  className="inline-flex w-fit items-center gap-2 whitespace-nowrap rounded-md bg-[var(--color-summit)] px-6 py-3.5 text-sm font-semibold text-[var(--color-paper)] transition-colors hover:bg-[var(--color-summit-2)]"
                 >
                   Begin the study — free <span aria-hidden>→</span>
                 </a>
                 <a
                   href="/"
-                  className="inline-flex items-center gap-2 rounded-md border border-white/15 px-6 py-3.5 text-sm font-medium text-[var(--color-paper)] transition-colors hover:bg-white/5"
+                  className="inline-flex w-fit items-center gap-2 whitespace-nowrap rounded-md border border-white/15 px-6 py-3.5 text-sm font-medium text-[var(--color-paper)] transition-colors hover:bg-white/5"
                 >
                   <span aria-hidden>▶</span> Watch the 2-min trailer
                 </a>
@@ -415,13 +415,13 @@ function RevelationFeatured() {
         <div className="mt-8 flex flex-wrap items-center gap-3">
           <a
             href="/"
-            className="inline-flex items-center gap-2 rounded-md bg-[var(--color-summit)] px-6 py-3.5 text-sm font-semibold text-[var(--color-paper)] transition-colors hover:bg-[var(--color-summit-2)]"
+            className="inline-flex w-fit items-center gap-2 whitespace-nowrap rounded-md bg-[var(--color-summit)] px-6 py-3.5 text-sm font-semibold text-[var(--color-paper)] transition-colors hover:bg-[var(--color-summit-2)]"
           >
             Start the series
           </a>
           <a
             href="/"
-            className="inline-flex items-center gap-2 rounded-md border border-white/15 px-6 py-3.5 text-sm font-medium text-[var(--color-paper)] transition-colors hover:bg-white/5"
+            className="inline-flex w-fit items-center gap-2 whitespace-nowrap rounded-md border border-white/15 px-6 py-3.5 text-sm font-medium text-[var(--color-paper)] transition-colors hover:bg-white/5"
           >
             <span aria-hidden>▶</span> Watch the trailer
           </a>
@@ -546,7 +546,7 @@ function MembershipSection() {
             </ul>
             <a
               href="/"
-              className="mt-10 inline-flex items-center justify-center rounded-md border border-[var(--color-ink)] px-6 py-3.5 text-sm font-semibold text-[var(--color-ink)] transition-colors hover:bg-[var(--color-ink)] hover:text-[var(--color-paper)]"
+              className="mt-10 inline-flex w-fit items-center justify-center gap-2 whitespace-nowrap rounded-md border border-[var(--color-ink)] px-6 py-3.5 text-sm font-semibold text-[var(--color-ink)] transition-colors hover:bg-[var(--color-ink)] hover:text-[var(--color-paper)]"
             >
               Create free account
             </a>
@@ -588,7 +588,7 @@ function MembershipSection() {
               </ul>
               <a
                 href="/"
-                className="mt-10 inline-flex items-center justify-center rounded-md bg-[var(--color-summit)] px-6 py-3.5 text-sm font-semibold text-[var(--color-paper)] transition-colors hover:bg-[var(--color-summit-2)]"
+                className="mt-10 inline-flex w-fit items-center justify-center gap-2 whitespace-nowrap rounded-md bg-[var(--color-summit)] px-6 py-3.5 text-sm font-semibold text-[var(--color-paper)] transition-colors hover:bg-[var(--color-summit-2)]"
               >
                 Become a supporter
               </a>
