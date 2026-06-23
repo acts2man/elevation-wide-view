@@ -9,38 +9,168 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SignupRouteImport } from './routes/signup'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as LibraryRouteImport } from './routes/library'
+import { Route as AdminRouteImport } from './routes/admin'
+import { Route as AccountRouteImport } from './routes/account'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as WatchLessonIdRouteImport } from './routes/watch.$lessonId'
+import { Route as SeriesSlugRouteImport } from './routes/series.$slug'
 
+const SignupRoute = SignupRouteImport.update({
+  id: '/signup',
+  path: '/signup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LibraryRoute = LibraryRouteImport.update({
+  id: '/library',
+  path: '/library',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AccountRoute = AccountRouteImport.update({
+  id: '/account',
+  path: '/account',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const WatchLessonIdRoute = WatchLessonIdRouteImport.update({
+  id: '/watch/$lessonId',
+  path: '/watch/$lessonId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SeriesSlugRoute = SeriesSlugRouteImport.update({
+  id: '/series/$slug',
+  path: '/series/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/account': typeof AccountRoute
+  '/admin': typeof AdminRoute
+  '/library': typeof LibraryRoute
+  '/login': typeof LoginRoute
+  '/signup': typeof SignupRoute
+  '/series/$slug': typeof SeriesSlugRoute
+  '/watch/$lessonId': typeof WatchLessonIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/account': typeof AccountRoute
+  '/admin': typeof AdminRoute
+  '/library': typeof LibraryRoute
+  '/login': typeof LoginRoute
+  '/signup': typeof SignupRoute
+  '/series/$slug': typeof SeriesSlugRoute
+  '/watch/$lessonId': typeof WatchLessonIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/account': typeof AccountRoute
+  '/admin': typeof AdminRoute
+  '/library': typeof LibraryRoute
+  '/login': typeof LoginRoute
+  '/signup': typeof SignupRoute
+  '/series/$slug': typeof SeriesSlugRoute
+  '/watch/$lessonId': typeof WatchLessonIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/account'
+    | '/admin'
+    | '/library'
+    | '/login'
+    | '/signup'
+    | '/series/$slug'
+    | '/watch/$lessonId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/account'
+    | '/admin'
+    | '/library'
+    | '/login'
+    | '/signup'
+    | '/series/$slug'
+    | '/watch/$lessonId'
+  id:
+    | '__root__'
+    | '/'
+    | '/account'
+    | '/admin'
+    | '/library'
+    | '/login'
+    | '/signup'
+    | '/series/$slug'
+    | '/watch/$lessonId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AccountRoute: typeof AccountRoute
+  AdminRoute: typeof AdminRoute
+  LibraryRoute: typeof LibraryRoute
+  LoginRoute: typeof LoginRoute
+  SignupRoute: typeof SignupRoute
+  SeriesSlugRoute: typeof SeriesSlugRoute
+  WatchLessonIdRoute: typeof WatchLessonIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/signup': {
+      id: '/signup'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof SignupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/library': {
+      id: '/library'
+      path: '/library'
+      fullPath: '/library'
+      preLoaderRoute: typeof LibraryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/account': {
+      id: '/account'
+      path: '/account'
+      fullPath: '/account'
+      preLoaderRoute: typeof AccountRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,11 +178,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/watch/$lessonId': {
+      id: '/watch/$lessonId'
+      path: '/watch/$lessonId'
+      fullPath: '/watch/$lessonId'
+      preLoaderRoute: typeof WatchLessonIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/series/$slug': {
+      id: '/series/$slug'
+      path: '/series/$slug'
+      fullPath: '/series/$slug'
+      preLoaderRoute: typeof SeriesSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AccountRoute: AccountRoute,
+  AdminRoute: AdminRoute,
+  LibraryRoute: LibraryRoute,
+  LoginRoute: LoginRoute,
+  SignupRoute: SignupRoute,
+  SeriesSlugRoute: SeriesSlugRoute,
+  WatchLessonIdRoute: WatchLessonIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
