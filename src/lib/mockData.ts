@@ -13,6 +13,7 @@ const now = () => new Date().toISOString();
 
 function seed(): MockStore {
   const profiles: Profile[] = [
+    { id: "p_troy", full_name: "Troy", email: "Troy@reputationguardians.net", role: "admin", created_at: now() },
     { id: "p_admin", full_name: "Pastor Admin", email: "admin@elevation.test", role: "admin", created_at: now() },
     { id: "p_member1", full_name: "Sarah Johnson", email: "sarah@example.com", role: "member", created_at: now() },
     { id: "p_member2", full_name: "Marcus Lee", email: "marcus@example.com", role: "member", created_at: now() },
@@ -125,7 +126,26 @@ export function loadStore(): MockStore {
       window.localStorage.setItem(STORAGE_KEY, JSON.stringify(s));
       return s;
     }
-    return JSON.parse(raw) as MockStore;
+    const store = JSON.parse(raw) as MockStore;
+    // Migration: ensure Troy exists as admin
+    const troyEmail = "troy@reputationguardians.net";
+    const existing = store.profiles.find((p) => p.email.toLowerCase() === troyEmail);
+    if (existing) {
+      if (existing.role !== "admin") {
+        existing.role = "admin";
+        window.localStorage.setItem(STORAGE_KEY, JSON.stringify(store));
+      }
+    } else {
+      store.profiles.unshift({
+        id: "p_troy",
+        full_name: "Troy",
+        email: "Troy@reputationguardians.net",
+        role: "admin",
+        created_at: new Date().toISOString(),
+      });
+      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(store));
+    }
+    return store;
   } catch {
     const s = seed();
     return s;
