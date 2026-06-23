@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { Headphones, Youtube, Check } from "lucide-react";
 import { SiteNav } from "@/components/SiteNav";
 import { SiteFooter } from "@/components/SiteFooter";
@@ -138,12 +138,12 @@ function Home() {
               </p>
 
               <div className="mt-10 flex flex-wrap items-center gap-3">
-                <a
-                  href="/"
+                <Link
+                  to="/signup"
                   className="inline-flex w-fit items-center gap-2 whitespace-nowrap rounded-md bg-[var(--color-summit)] px-6 py-3.5 text-sm font-semibold text-[var(--color-paper)] transition-colors hover:bg-[var(--color-summit-2)]"
                 >
                   Begin the study — free <span aria-hidden>→</span>
-                </a>
+                </Link>
                 <a
                   href="/"
                   className="inline-flex w-fit items-center gap-2 whitespace-nowrap rounded-md border border-white/15 px-6 py-3.5 text-sm font-medium text-[var(--color-paper)] transition-colors hover:bg-white/5"
@@ -596,12 +596,12 @@ function MembershipSection() {
                 </li>
               ))}
             </ul>
-            <a
-              href="/"
+            <Link
+              to="/signup"
               className="mt-10 inline-flex w-fit items-center justify-center gap-2 whitespace-nowrap rounded-md border border-[var(--color-ink)] px-6 py-3.5 text-sm font-semibold text-[var(--color-ink)] transition-colors hover:bg-[var(--color-ink)] hover:text-[var(--color-paper)]"
             >
               Create free account
-            </a>
+            </Link>
           </div>
 
           {/* Supporter (dark) */}
@@ -638,12 +638,14 @@ function MembershipSection() {
                   </li>
                 ))}
               </ul>
-              <a
-                href="/"
-                className="mt-10 inline-flex w-fit items-center justify-center gap-2 whitespace-nowrap rounded-md bg-[var(--color-summit)] px-6 py-3.5 text-sm font-semibold text-[var(--color-paper)] transition-colors hover:bg-[var(--color-summit-2)]"
+              <button
+                type="button"
+                disabled
+                aria-disabled="true"
+                className="mt-10 inline-flex w-fit cursor-not-allowed items-center justify-center gap-2 whitespace-nowrap rounded-md border border-white/15 bg-white/5 px-6 py-3.5 text-sm font-semibold text-[var(--color-paper-2)]/70"
               >
-                Become a supporter
-              </a>
+                Supporter tier — coming soon
+              </button>
             </div>
           </div>
         </div>
