@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { Headphones, Youtube, Check } from "lucide-react";
 import { SiteNav } from "@/components/SiteNav";
@@ -31,6 +32,28 @@ const STATS = [
 ];
 
 function Home() {
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const els = document.querySelectorAll<HTMLElement>(".reveal");
+    if (!("IntersectionObserver" in window)) {
+      els.forEach((el) => el.classList.add("is-visible"));
+      return;
+    }
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+            io.unobserve(entry.target);
+          }
+        });
+      },
+      { rootMargin: "0px 0px -10% 0px", threshold: 0.08 },
+    );
+    els.forEach((el) => io.observe(el));
+    return () => io.disconnect();
+  }, []);
+
   return (
     <div className="flex min-h-screen flex-col bg-[var(--color-paper)]">
       <SiteNav />
@@ -72,7 +95,7 @@ function Home() {
               <p className="font-sans text-[11px] font-medium uppercase tracking-[0.28em] text-[var(--color-summit-2)]">
                 Elevation Bible Study · The Thousand-Foot View
               </p>
-              <h1 className="mt-6 h-hero text-[var(--color-paper)]">
+              <h1 className="reveal mt-6 h-hero text-[var(--color-paper)]">
                 Step back, and Scripture{" "}
                 <span className="text-[var(--color-summit-2)]">
                   snaps into focus.
@@ -147,18 +170,18 @@ function WhyExistsSection() {
           <p className="font-sans text-[11px] font-medium uppercase tracking-[0.28em] text-[var(--color-summit)]">
             Why this study exists
           </p>
-          <h2 className="mt-6 h-section text-[var(--color-ink)]">
+          <h2 className="reveal mt-6 h-section text-[var(--color-ink)]">
             You don't need a seminary degree to understand the Bible. You need
             the right{" "}
             <span className="text-[var(--color-summit)]">altitude.</span>
           </h2>
         </div>
 
-        <div className="mt-16 grid grid-cols-1 gap-6 md:grid-cols-3 md:gap-8">
+        <div className="reveal mt-16 grid grid-cols-1 gap-6 md:grid-cols-3 md:gap-8">
           {PAINS.map((c) => (
             <div
               key={c.outcome}
-              className="flex flex-col rounded-2xl border border-[var(--color-line)] bg-[var(--color-paper-2)]/40 p-7"
+              className="card-lift flex flex-col rounded-2xl border border-[var(--color-line)] bg-[var(--color-paper-2)]/40 p-7"
             >
               <p className="font-scripture text-base italic text-[var(--color-brand-muted)] line-through decoration-[var(--color-brand-muted)]/60">
                 “{c.pain}”
@@ -222,9 +245,9 @@ function ApproachSection() {
         </p>
         <div className="mt-6 h-px w-full bg-white/10" />
 
-        <div className="mt-14 grid grid-cols-1 gap-14 lg:grid-cols-2 lg:gap-20">
+        <div className="reveal mt-14 grid grid-cols-1 gap-14 lg:grid-cols-2 lg:gap-20">
           <div>
-            <h2 className="h-section text-[var(--color-paper)]">
+            <h2 className="reveal h-section text-[var(--color-paper)]">
               We read Scripture like the{" "}
               <span className="text-[var(--color-summit-2)]">
                 evidence it is.
@@ -322,7 +345,7 @@ function StudyLibrarySection() {
             <p className="font-sans text-[11px] font-medium uppercase tracking-[0.28em] text-[var(--color-summit)]">
               The study library
             </p>
-            <h2 className="mt-6 h-section text-[var(--color-ink)]">
+            <h2 className="reveal mt-6 h-section text-[var(--color-ink)]">
               Pick a book. Watch in order, start to finish.
             </h2>
           </div>
@@ -332,11 +355,11 @@ function StudyLibrarySection() {
           </p>
         </div>
 
-        <div className="mt-14 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="reveal mt-14 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {STUDIES.map((s) => (
             <article
               key={s.title}
-              className="group flex flex-col overflow-hidden rounded-2xl border border-[var(--color-line)] bg-[var(--color-paper)] transition-colors hover:border-[var(--color-summit)]/40"
+              className="card-lift group flex flex-col overflow-hidden rounded-2xl border border-[var(--color-line)] bg-[var(--color-paper)] hover:border-[var(--color-summit)]/40"
             >
               <div className="relative aspect-[16/10] overflow-hidden bg-[var(--color-ink)]">
                 <ContourBackdrop
@@ -454,7 +477,7 @@ function ListenWatchSection() {
         {cards.map(({ Icon, eyebrow, title, body, cta }) => (
           <div
             key={title}
-            className="flex items-start gap-5 rounded-2xl border border-[var(--color-line)] bg-[var(--color-paper-2)]/50 p-6 md:p-8"
+            className="card-lift flex items-start gap-5 rounded-2xl border border-[var(--color-line)] bg-[var(--color-paper-2)]/50 p-6 md:p-8"
           >
             <div className="flex h-14 w-14 flex-none items-center justify-center rounded-xl bg-[var(--color-ink)] text-[var(--color-summit-2)]">
               <Icon size={24} />
@@ -509,7 +532,7 @@ function MembershipSection() {
           <p className="font-sans text-[11px] font-medium uppercase tracking-[0.28em] text-[var(--color-summit)]">
             Membership
           </p>
-          <h2 className="mt-6 h-section text-[var(--color-ink)]">
+          <h2 className="reveal mt-6 h-section text-[var(--color-ink)]">
             Watch everything free.{" "}
             <span className="text-[var(--color-summit)]">
               Support it if it feeds you.
@@ -522,9 +545,9 @@ function MembershipSection() {
           </p>
         </div>
 
-        <div className="mt-14 grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-8">
+        <div className="reveal mt-14 grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-8">
           {/* Free */}
-          <div className="flex flex-col rounded-2xl border border-[var(--color-line)] bg-[var(--color-paper)] p-8 md:p-10">
+          <div className="card-lift flex flex-col rounded-2xl border border-[var(--color-line)] bg-[var(--color-paper)] p-8 md:p-10">
             <p className="font-sans text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--color-brand-muted)]">
               Free Account
             </p>
@@ -624,7 +647,7 @@ function LanguagesSection() {
         <p className="font-sans text-[11px] font-medium uppercase tracking-[0.28em] text-[var(--color-summit-2)]">
           For every background and nation
         </p>
-        <h2 className="mt-6 h-section text-[var(--color-paper)]">
+        <h2 className="reveal mt-6 h-section text-[var(--color-paper)]">
           The same study, translated — so language is never the barrier to
           understanding.
         </h2>
@@ -688,7 +711,7 @@ function AboutSection() {
 
           {/* Bio */}
           <div className="lg:col-span-3">
-            <h2 className="h-section text-[var(--color-paper)]">
+            <h2 className="reveal h-section text-[var(--color-paper)]">
               Rev. William Fussell,{" "}
               <span className="text-[var(--color-summit-2)]">JD</span>
             </h2>
