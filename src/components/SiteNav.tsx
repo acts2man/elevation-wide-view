@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { Menu, X } from "lucide-react";
+import logoAsset from "@/assets/elevation-logo.png.asset.json";
 
 const NAV_LINKS = [
   { label: "Studies", href: "/" },
@@ -19,11 +20,17 @@ export function SiteNav() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-[var(--color-line)] bg-[color-mix(in_oklab,var(--color-paper)_85%,transparent)] backdrop-blur-md">
-      <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between gap-6 px-5 lg:px-8">
-        <Link to="/" className="flex items-center gap-2">
-          <span className="font-display text-lg font-bold tracking-tight text-[var(--color-ink)]">
-            Elevation Bible Study
-          </span>
+      <div className="mx-auto flex h-20 w-full max-w-7xl items-center justify-between gap-6 px-5 lg:px-8">
+        <Link
+          to="/"
+          className="flex items-center"
+          aria-label="Elevation Bible Study — The Thousand-Foot View"
+        >
+          <img
+            src={logoAsset.url}
+            alt="Elevation Bible Study · Thousand Foot View"
+            className="h-12 w-auto md:h-14"
+          />
         </Link>
 
         <nav className="hidden items-center gap-8 lg:flex">
