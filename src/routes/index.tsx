@@ -109,6 +109,7 @@ function Home() {
 
         <WhyExistsSection />
         <ApproachSection />
+        <StudyLibrarySection />
       </main>
       <SiteFooter />
     </div>
