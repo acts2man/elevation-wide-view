@@ -79,7 +79,7 @@ export async function deleteSeries(id: string): Promise<void> {
     s.series = s.series.filter((x) => x.id !== id);
     s.lessons = s.lessons.filter((l) => l.series_id !== id);
   });
-  return tick();
+  return tick(undefined as void);
 }
 
 export async function reorderSeries(orderedIds: string[]): Promise<void> {
@@ -89,7 +89,7 @@ export async function reorderSeries(orderedIds: string[]): Promise<void> {
       if (t) t.position = i + 1;
     });
   });
-  return tick();
+  return tick(undefined as void);
 }
 
 // ---------- Lessons ----------
@@ -136,7 +136,7 @@ export async function deleteLesson(id: string): Promise<void> {
   mutateStore((s) => {
     s.lessons = s.lessons.filter((l) => l.id !== id);
   });
-  return tick();
+  return tick(undefined as void);
 }
 
 export async function reorderLessons(seriesId: string, orderedIds: string[]): Promise<void> {
@@ -146,7 +146,7 @@ export async function reorderLessons(seriesId: string, orderedIds: string[]): Pr
       if (l) l.position = i + 1;
     });
   });
-  return tick();
+  return tick(undefined as void);
 }
 
 // ---------- Members ----------
