@@ -5,6 +5,7 @@ import { SiteNav } from "@/components/SiteNav";
 import { SiteFooter } from "@/components/SiteFooter";
 import { ContourBackdrop } from "@/components/ContourBackdrop";
 import { VennMark } from "@/components/VennMark";
+import heroBg from "@/assets/hero-bg.jpg.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -59,11 +60,18 @@ function Home() {
       <SiteNav />
       <main className="flex-1">
         <section className="relative overflow-hidden bg-[var(--color-ink)] text-[var(--color-paper)]">
+          <img
+            src={heroBg.url}
+            alt=""
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-60"
+          />
           <ContourBackdrop
-            className="pointer-events-none absolute inset-0 h-full w-full"
+            className="pointer-events-none absolute inset-0 h-full w-full opacity-40"
             variant="dark"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[var(--color-ink)]/60" />
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[var(--color-ink)]/70 via-[var(--color-ink)]/55 to-[var(--color-ink)]/90" />
+
 
           <div className="relative mx-auto grid w-full max-w-7xl grid-cols-1 gap-12 px-5 py-20 md:py-28 lg:grid-cols-5 lg:gap-16 lg:px-8">
             {/* Right card — appears first on mobile, right column on desktop */}
