@@ -5,6 +5,7 @@ import { SiteNav } from "@/components/SiteNav";
 import { SiteFooter } from "@/components/SiteFooter";
 import { ContourBackdrop } from "@/components/ContourBackdrop";
 import { VennMark } from "@/components/VennMark";
+import heroBg from "@/assets/hero-bg.jpg.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
