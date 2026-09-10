@@ -29,4 +29,4 @@ Ministry content and the curriculum themes are based on the user-provided refere
 
 ## Commands
 
-Use the Sites lifecycle scripts to install, build, package, and privately publish. Preserve `.openai/hosting.json` as the Site identity and retain the existing package lockfile.
+Install and run locally with `npm install` and `npm run dev`. The GitHub version uses a standard Next.js build for Netlify; `netlify.toml` supplies the build command and publish directory.
