@@ -25,7 +25,7 @@ Language is a device preference in localStorage. Course edits, session video lin
 
 ## Content and imagery
 
-Ministry content and the curriculum themes are based on the user-provided reference at https://elevation-wide-view.lovable.app/. Additional session titles are a sample curriculum, clearly labeled. The original uploaded Elevation logo is preserved, displayed at a larger size with stronger contrast and a light sidebar panel. Troy Johnson’s uploaded photograph supplies the shared preview profile image. Two original generated editorial images depict an alpine summit and an open Bible; they are used as atmosphere, not documentary photographs of the teacher.
+Ministry content and the curriculum themes are based on the user-provided reference at https://elevation-wide-view.lovable.app/. Additional session titles are a sample curriculum, clearly labeled. The original uploaded Elevation logo is preserved, displayed at a larger size with stronger contrast and a light sidebar panel. Troy Johnson’s uploaded photograph supplies the shared preview profile image. Two original generated editorial images (`summit.webp` and `scripture.webp`) depict an alpine summit and an open Bible; they are used as atmosphere, not documentary photographs of the teacher.
 
 ## Commands
 
