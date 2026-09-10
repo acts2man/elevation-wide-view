@@ -142,3 +142,7 @@
 .player-progress:focus-visible{outline:2px solid #e0ca9e;outline-offset:2px;border-radius:2px}
 .player-video:fullscreen{border-radius:0}
 @media(max-width:520px){.player-controls.live{padding:10px 14px 12px;font-size:9px}}
+/* Teacher portrait */
+.teacher-portrait{display:block;width:100%;max-width:340px;aspect-ratio:1;object-fit:cover;object-position:center 30%;border-radius:14px;box-shadow:0 18px 40px -24px #24333080}
+.teacher-avatar{object-fit:cover;object-position:center 30%;border-radius:50%;background:#d7c19b}
+@media(max-width:767px){.teacher-portrait{max-width:260px}}
