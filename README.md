@@ -10,18 +10,18 @@ A multilingual design prototype with a public ministry website, member learning 
 - `/login`: Clearly labeled member and administrator preview entry points. No credential collection.
 - `/member`: Member overview with session progress and recommended studies.
 - `/member/studies`: Course library and progress.
-- `/member/lesson/[course]`: Curriculum, video placeholder, lesson completion, notes, and resource placeholders.
+- `/member/lesson/[course]`: Curriculum, inline video player, lesson completion, notes, and resource placeholders. The centered play button plays the session's linked video in place (no pop-up); when a video ends, playback continues with the next session in the curriculum that has a video.
 - `/member/notes`: Session notes and personal reflections.
 - `/admin`: Sample activity reporting and content overview.
 - `/admin/studies`: Create and edit study previews.
-- `/admin/sessions`: Review and edit session titles.
+- `/admin/sessions`: Review and edit session titles and link each session's hosted video (a direct .mp4/.webm/.m3u8 file, a YouTube link, or a Vimeo link).
 - `/admin/members`: Sample member activity with Troy Johnson’s supplied name and portrait and preview status controls.
 - `/admin/languages`: English, Spanish, and German study-title review.
 - `/admin/settings`: Preview-only configuration controls and launch readiness.
 
 ## State and launch boundary
 
-Language is a device preference in localStorage. Course edits, notes, and lesson completion use shared React state for the current browser session and reset on reload. Member records and settings are demonstration controls. There is no app-owned authentication, payment collection, video hosting, or backend persistence. Connect and authorize those capabilities before a public member launch. The supporter offer remains coming soon.
+Language is a device preference in localStorage. Course edits, session video links, notes, and lesson completion use shared React state for the current browser session and reset on reload. Member records and settings are demonstration controls. There is no app-owned authentication, payment collection, video hosting, or backend persistence; videos play from whatever host the admin links. Connect and authorize those capabilities before a public member launch. The supporter offer remains coming soon.
 
 ## Content and imagery
 
