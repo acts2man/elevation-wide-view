@@ -30,7 +30,7 @@ export function ContactPage() {
     <PublicHeader />
     <main className="contact-page">
       <section className="contact-hero">
-        <img src="/images/summit.png" alt="" aria-hidden="true" />
+        <img src="/images/summit.webp" alt="" aria-hidden="true" />
         <div className="site-container contact-hero-content">
           <Eyebrow gold>{tr('Let’s connect', 'Conversemos', 'Kommen wir ins Gespräch')}</Eyebrow>
           <h1>{tr('Every question is', 'Cada pregunta es', 'Jede Frage ist')}<em>{tr('a place to begin.', 'un punto de partida.', 'ein neuer Anfang.')}</em></h1>
