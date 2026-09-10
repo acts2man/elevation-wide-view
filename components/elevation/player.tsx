@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Play, Pause, Maximize2 } from 'lucide-react';
 import { useElevation } from './provider';
 
-export type VideoSource = { kind: 'file'; src: string } | { kind: 'youtube'; id: string } | { kind: 'vimeo'; id: string; hash?: string };
+export type VideoSource = { kind: 'file'; src: string } | { kind: 'youtube'; id: string } | { kind: 'vimeo'; id: string; hash?: string } | { kind: 'gumlet'; id: string };
 
 /** Turn a pasted session link into something the inline player can render. */
 export function parseVideo(url: string | undefined): VideoSource | null {
@@ -24,6 +24,11 @@ export function parseVideo(url: string | undefined): VideoSource | null {
     if (!match) return null;
     const hash = parsed.searchParams.get('h') || match[2];
     return hash ? { kind: 'vimeo', id: match[1], hash } : { kind: 'vimeo', id: match[1] };
+  }
+  // Gumlet: a gumlet.tv/watch/<id> share link or a play.gumlet.io/embed/<id> player link.
+  if (host === 'gumlet.tv' || host === 'gumlet.io' || host === 'play.gumlet.io') {
+    const id = parsed.pathname.match(/\/(?:watch|embed)\/([a-f0-9]{8,})/i)?.[1];
+    return id ? { kind: 'gumlet', id } : null;
   }
   return { kind: 'file', src: value };
 }
@@ -74,12 +79,16 @@ function FileVideo({ src, title, onEnded }: { src: string; title: string; onEnde
 
 const YOUTUBE_ORIGIN = 'https://www.youtube.com';
 const VIMEO_ORIGIN = 'https://player.vimeo.com';
+const GUMLET_ORIGIN = 'https://play.gumlet.io';
 
 function embedUrl(source: Exclude<VideoSource, { kind: 'file' }>) {
   if (source.kind === 'youtube') {
     const params = new URLSearchParams({ autoplay: '1', rel: '0', playsinline: '1', enablejsapi: '1' });
     if (typeof window !== 'undefined') params.set('origin', window.location.origin);
     return `${YOUTUBE_ORIGIN}/embed/${encodeURIComponent(source.id)}?${params}`;
+  }
+  if (source.kind === 'gumlet') {
+    return `${GUMLET_ORIGIN}/embed/${encodeURIComponent(source.id)}?autoplay=true&preload=true`;
   }
   const params = new URLSearchParams({ autoplay: '1', api: '1' });
   if (source.hash) params.set('h', source.hash);
@@ -93,6 +102,8 @@ function EmbeddedVideo({ source, title, onEnded }: { source: Exclude<VideoSource
   useEffect(() => { ended.current = onEnded; }, [onEnded]);
   const [src] = useState(() => embedUrl(source));
   useEffect(() => {
+    // Only the YouTube and Vimeo players report playback events we can listen for.
+    if (source.kind !== 'youtube' && source.kind !== 'vimeo') return;
     const target = source.kind === 'youtube' ? YOUTUBE_ORIGIN : VIMEO_ORIGIN;
     const post = (message: object) => frame.current?.contentWindow?.postMessage(JSON.stringify(message), target);
     const subscribe = () => {
