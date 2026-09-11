@@ -156,3 +156,13 @@
 .editor-form label textarea{min-height:88px}
 
 .lesson-player>img.custom-poster{object-position:left center}
+
+.auth-field{display:flex;flex-direction:column;gap:8px;font-size:13px;font-weight:500;color:#526e43;margin-bottom:16px}
+.auth-field input{height:45px;font-size:14px;border-radius:6px;border-color:#d6dfd7}
+.auth-error{color:#b3441f;font-size:13px;margin-bottom:14px}
+.login-form .small-note a{color:#2c4634;font-weight:600;text-decoration:underline}
+
+.side-profile{position:relative}
+.side-signout{margin-left:auto;background:transparent;border:none;color:#98acb0;cursor:pointer;padding:6px;border-radius:6px}
+.side-signout:hover{background:#ffffff14;color:#f5efe0}
+.side-signout svg{width:16px;height:16px}
