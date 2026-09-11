@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogTitle, DialogDescription, DialogClose } from '@/components/ui/dialog';
 import { useElevation } from './provider';
-import { PublicHeader, PublicFooter, ExploreDock, Eyebrow } from './shared';
+import { PublicHeader, PublicFooter, Eyebrow } from './shared';
 
 export function ContactPage() {
   const { tr } = useElevation();
@@ -66,7 +66,6 @@ export function ContactPage() {
       </div>
     </main>
     <PublicFooter />
-    <ExploreDock />
     <Dialog open={review} onOpenChange={setReview}><DialogContent className="editor-dialog contact-review"><DialogTitle>{tr('Your message preview', 'Vista previa de tu mensaje', 'Vorschau deiner Nachricht')}</DialogTitle><DialogDescription>{tr('Nothing has been sent. Review your message below or return to make changes.', 'No se ha enviado nada. Revisa tu mensaje o vuelve para hacer cambios.', 'Es wurde nichts versendet. Prüfe deine Nachricht oder kehre zum Bearbeiten zurück.')}</DialogDescription><dl><div><dt>{tr('From', 'De', 'Von')}</dt><dd>{name}<span>{email}</span></dd></div><div><dt>{tr('Topic', 'Tema', 'Thema')}</dt><dd>{currentTopic}</dd></div></dl><p className="contact-message-preview">{message}</p><DialogClose asChild><Button className="button dark">{tr('Back to the form', 'Volver al formulario', 'Zurück zum Formular')}</Button></DialogClose></DialogContent></Dialog>
   </>;
 }
