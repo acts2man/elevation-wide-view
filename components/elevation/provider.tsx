@@ -3,86 +3,89 @@ import { createContext, useContext, useEffect, useState, type ReactNode } from '
 import { Toaster } from '@/components/ui/sonner';
 import { initialCourses, pick, type Course, type Language, type Localized } from './data';
 type Note = { id: string; course: string; lesson: number; text: string };
-type SessionMediaPatch = { image?: string; description?: string; audioUrl?: string; audioName?: string };
-type State = { lang:Language; setLang:(v:Language)=>void; tr:(en:string,es:string,de:string)=>string; tx:(t:Localized)=>string; courses:Course[]; setCourses:React.Dispatch<React.SetStateAction<Course[]>>; updateSessionVideo:(courseId:string,index:number,url:string)=>void; updateSessionMedia:(courseId:string,index:number,patch:SessionMediaPatch)=>void; completed:string[]; complete:(key:string)=>void; notes:Note[]; saveNote:(note:Note)=>void };
+type SessionMediaPatch = { title?: string; videoUrl?: string; description?: string; image?: string; audioUrl?: string; audioName?: string };
+type State = { lang:Language; setLang:(v:Language)=>void; tr:(en:string,es:string,de:string)=>string; tx:(t:Localized)=>string; courses:Course[]; setCourses:React.Dispatch<React.SetStateAction<Course[]>>; saveSession:(courseId:string,index:number,patch:SessionMediaPatch)=>Promise<void>; savingSession:boolean; completed:string[]; complete:(key:string)=>void; notes:Note[]; saveNote:(note:Note)=>void };
 const Context=createContext<State|null>(null);
-const VIDEO_KEY='elevation-session-videos';
-const MEDIA_KEY='elevation-session-media';
-// Session video links are kept in the browser so admin edits survive a page reload until a backend is connected.
-function applyStoredVideos(courses:Course[],map:Record<string,string[]>):Course[]{
- return courses.map(c=>Array.isArray(map[c.id])?{...c,videos:c.lessons.map((_,i)=>map[c.id][i]??c.videos?.[i]??'')}:c);
-}
-function persistVideos(courses:Course[]){
- try{const map:Record<string,string[]>={};for(const c of courses){if(c.videos&&c.videos.some(Boolean))map[c.id]=c.lessons.map((_,i)=>c.videos?.[i]??'');}localStorage.setItem(VIDEO_KEY,JSON.stringify(map));}catch{}
-}
-type StoredMedia = { images?: string[]; audio?: string[]; audioNames?: string[]; descriptions?: Localized[] };
-// Session graphics, descriptions, and audio are likewise kept in the browser until a backend is connected.
-function applyStoredMedia(courses:Course[],map:Record<string,StoredMedia>):Course[]{
+
+type SessionRow = { course_id:string; lesson_index:number; title_en?:string|null; title_es?:string|null; title_de?:string|null; video_url?:string|null; image_url?:string|null; description_en?:string|null; description_es?:string|null; description_de?:string|null; audio_url?:string|null; audio_name?:string|null };
+
+/** Session titles, video links, graphics, descriptions, and audio all live in Supabase now, so every open screen (any tab, any device) sees the same data. */
+function applySessionRows(courses:Course[],rows:SessionRow[]):Course[]{
+ const byCourse=new Map<string,Map<number,SessionRow>>();
+ for(const r of rows){
+  if(!byCourse.has(r.course_id))byCourse.set(r.course_id,new Map());
+  byCourse.get(r.course_id)!.set(r.lesson_index,r);
+ }
  return courses.map(c=>{
-  const m=map[c.id];if(!m)return c;
-  return {...c,
-   images:m.images?c.lessons.map((_,i)=>m.images![i]??c.images?.[i]??''):c.images,
-   audio:m.audio?c.lessons.map((_,i)=>m.audio![i]??c.audio?.[i]??''):c.audio,
-   audioNames:m.audioNames?c.lessons.map((_,i)=>m.audioNames![i]??c.audioNames?.[i]??''):c.audioNames,
-   descriptions:m.descriptions?c.lessons.map((_,i)=>m.descriptions![i]??c.descriptions?.[i]??['','','']):c.descriptions,
-  };
+  const rows=byCourse.get(c.id);
+  if(!rows)return c;
+  const lessons=c.lessons.map((l,i)=>{
+   const r=rows.get(i);if(!r)return l;
+   const a=[...l] as Localized;
+   if(r.title_en)a[0]=r.title_en;if(r.title_es)a[1]=r.title_es;if(r.title_de)a[2]=r.title_de;
+   return a;
+  });
+  const videos=c.lessons.map((_,i)=>rows.get(i)?.video_url??'');
+  const images=c.lessons.map((_,i)=>rows.get(i)?.image_url??'');
+  const audio=c.lessons.map((_,i)=>rows.get(i)?.audio_url??'');
+  const audioNames=c.lessons.map((_,i)=>rows.get(i)?.audio_name??'');
+  const descriptions=c.lessons.map((_,i)=>{
+   const r=rows.get(i);
+   return [r?.description_en??'',r?.description_es??'',r?.description_de??''] as Localized;
+  });
+  return {...c,lessons,videos,images,audio,audioNames,descriptions};
  });
 }
-function persistMedia(courses:Course[]){
- try{
-  const map:Record<string,StoredMedia>={};
-  for(const c of courses){
-   const hasImages=c.images?.some(Boolean);const hasAudio=c.audio?.some(Boolean);const hasDescriptions=c.descriptions?.some(d=>d?.some(Boolean));
-   if(hasImages||hasAudio||hasDescriptions)map[c.id]={
-    images:c.lessons.map((_,i)=>c.images?.[i]??''),
-    audio:c.lessons.map((_,i)=>c.audio?.[i]??''),
-    audioNames:c.lessons.map((_,i)=>c.audioNames?.[i]??''),
-    descriptions:c.lessons.map((_,i)=>c.descriptions?.[i]??['','','']),
-   };
-  }
-  localStorage.setItem(MEDIA_KEY,JSON.stringify(map));
- }catch{}
-}
+
 export function ElevationProvider({children}:{children:ReactNode}) {
  const [lang,setLanguage]=useState<Language>('en');
  const [courses,setCourses]=useState(initialCourses);
  const [completed,setCompleted]=useState(['interpretation-0','romans-0','romans-1','romans-2']);
  const [notes,setNotes]=useState<Note[]>([]);
+ const [savingSession,setSavingSession]=useState(false);
  useEffect(()=>{const saved=localStorage.getItem('elevation-language');if(saved==='en'||saved==='es'||saved==='de')setLanguage(saved)},[]);
- // eslint-disable-next-line react-hooks/set-state-in-effect -- hydrate saved links after mount to avoid an SSR/client mismatch
- useEffect(()=>{try{const raw=localStorage.getItem(VIDEO_KEY);if(raw){const map=JSON.parse(raw);if(map&&typeof map==='object')setCourses(cs=>applyStoredVideos(cs,map));}}catch{}},[]);
- // eslint-disable-next-line react-hooks/set-state-in-effect -- hydrate saved media after mount to avoid an SSR/client mismatch
- useEffect(()=>{try{const raw=localStorage.getItem(MEDIA_KEY);if(raw){const map=JSON.parse(raw);if(map&&typeof map==='object')setCourses(cs=>applyStoredMedia(cs,map));}}catch{}},[]);
- // Other tabs/windows on this device write to the same keys; pick up their changes so every open screen stays in sync.
+ const loadSessionMedia=async()=>{
+  try{
+   const res=await fetch('/api/session-media',{cache:'no-store'});
+   const data=await res.json();
+   if(data?.ok&&Array.isArray(data.rows))setCourses(cs=>applySessionRows(cs,data.rows));
+  }catch{}
+ };
  useEffect(()=>{
-  const onStorage=(e:StorageEvent)=>{
-   if(e.key===VIDEO_KEY){try{const map=e.newValue?JSON.parse(e.newValue):{};if(map&&typeof map==='object')setCourses(cs=>applyStoredVideos(cs,map));}catch{}}
-   if(e.key===MEDIA_KEY){try{const map=e.newValue?JSON.parse(e.newValue):{};if(map&&typeof map==='object')setCourses(cs=>applyStoredMedia(cs,map));}catch{}}
-  };
-  window.addEventListener('storage',onStorage);
-  return ()=>window.removeEventListener('storage',onStorage);
+  loadSessionMedia();
+  // No realtime channel yet, so poll and refresh on focus: this is how every open screen (this device or another) picks up admin edits.
+  const interval=window.setInterval(loadSessionMedia,20000);
+  window.addEventListener('focus',loadSessionMedia);
+  return ()=>{window.clearInterval(interval);window.removeEventListener('focus',loadSessionMedia)};
  },[]);
  useEffect(()=>{document.documentElement.lang=lang},[lang]);
  const setLang=(v:Language)=>{setLanguage(v);localStorage.setItem('elevation-language',v)};
  const tr=(en:string,es:string,de:string)=>pick([en,es,de],lang);
  const saveNote=(note:Note)=>setNotes(old=>[...old.filter(n=>n.id!==note.id),note]);
- const updateSessionVideo=(courseId:string,index:number,url:string)=>setCourses(old=>{const next=old.map(c=>c.id!==courseId?c:{...c,videos:c.lessons.map((_,i)=>i===index?url.trim():(c.videos?.[i]??''))});persistVideos(next);return next;});
- const updateSessionMedia=(courseId:string,index:number,patch:SessionMediaPatch)=>setCourses(old=>{
-  const next=old.map(c=>{
+ const saveSession=async(courseId:string,index:number,patch:SessionMediaPatch)=>{
+  setCourses(old=>old.map(c=>{
    if(c.id!==courseId)return c;
-   const images=c.lessons.map((_,i)=>c.images?.[i]??'');
-   const audio=c.lessons.map((_,i)=>c.audio?.[i]??'');
-   const audioNames=c.lessons.map((_,i)=>c.audioNames?.[i]??'');
-   const descriptions=c.lessons.map((_,i)=>(c.descriptions?.[i]??['','','']) as Localized);
-   if(patch.image!==undefined)images[index]=patch.image.trim();
-   if(patch.audioUrl!==undefined)audio[index]=patch.audioUrl.trim();
-   if(patch.audioName!==undefined)audioNames[index]=patch.audioName.trim();
-   if(patch.description!==undefined){const d=[...descriptions[index]] as Localized;d[lang==='en'?0:lang==='es'?1:2]=patch.description;descriptions[index]=d;}
-   return {...c,images,audio,audioNames,descriptions};
-  });
-  persistMedia(next);
-  return next;
- });
- return <Context.Provider value={{lang,setLang,tr,tx:(t)=>pick(t,lang),courses,setCourses,updateSessionVideo,updateSessionMedia,completed,complete:(key)=>setCompleted(old=>old.includes(key)?old.filter(k=>k!==key):[...old,key]),notes,saveNote}}>{children}<Toaster position="bottom-right" richColors /></Context.Provider>
+   const lessons=c.lessons.map((l,i)=>{
+    if(i!==index||patch.title===undefined)return l;
+    const a=[...l] as Localized;a[lang==='en'?0:lang==='es'?1:2]=patch.title;return a;
+   });
+   const videos=patch.videoUrl===undefined?c.videos:c.lessons.map((_,i)=>i===index?patch.videoUrl!.trim():(c.videos?.[i]??''));
+   const images=patch.image===undefined?c.images:c.lessons.map((_,i)=>i===index?patch.image!.trim():(c.images?.[i]??''));
+   const audio=patch.audioUrl===undefined?c.audio:c.lessons.map((_,i)=>i===index?patch.audioUrl!.trim():(c.audio?.[i]??''));
+   const audioNames=patch.audioName===undefined?c.audioNames:c.lessons.map((_,i)=>i===index?patch.audioName!.trim():(c.audioNames?.[i]??''));
+   const descriptions=c.lessons.map((_,i)=>(c.descriptions?.[i]??['','',''])as Localized);
+   if(patch.description!==undefined){const d=[...descriptions[index]]as Localized;d[lang==='en'?0:lang==='es'?1:2]=patch.description;descriptions[index]=d;}
+   return {...c,lessons,videos,images,audio,audioNames,descriptions};
+  }));
+  setSavingSession(true);
+  try{
+   const image=patch.image===undefined?undefined:patch.image.startsWith('data:')?{dataUrl:patch.image}:patch.image===''?{remove:true}:undefined;
+   const audioBody=patch.audioUrl===undefined?undefined:patch.audioUrl.startsWith('data:')?{dataUrl:patch.audioUrl,name:patch.audioName}:patch.audioUrl===''?{remove:true}:undefined;
+   const res=await fetch('/api/admin/session-media',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({courseId,lessonIndex:index,lang,title:patch.title,videoUrl:patch.videoUrl,description:patch.description,image,audio:audioBody})});
+   const data=await res.json().catch(()=>({ok:false}));
+   if(data?.ok)await loadSessionMedia();
+  }finally{setSavingSession(false)}
+ };
+ return <Context.Provider value={{lang,setLang,tr,tx:(t)=>pick(t,lang),courses,setCourses,saveSession,savingSession,completed,complete:(key)=>setCompleted(old=>old.includes(key)?old.filter(k=>k!==key):[...old,key]),notes,saveNote}}>{children}<Toaster position="bottom-right" richColors /></Context.Provider>
 }
 export function useElevation(){const context=useContext(Context);if(!context)throw new Error('ElevationProvider is required');return context}
