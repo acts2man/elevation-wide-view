@@ -155,7 +155,7 @@
 .editor-image-preview span{font-size:12px;color:#425d36}
 .editor-form label textarea{min-height:88px}
 
-.lesson-player>img.custom-poster{object-position:left center}
+.lesson-player>img.custom-poster{object-fit:contain;object-position:center;background:#0b171e}
 
 .auth-field{display:flex;flex-direction:column;gap:8px;font-size:13px;font-weight:500;color:#526e43;margin-bottom:16px}
 .auth-field input{height:45px;font-size:14px;border-radius:6px;border-color:#d6dfd7}
@@ -172,3 +172,5 @@
 .upload-progress{display:flex;flex-direction:column;gap:6px;font-size:12px;color:#526e43;margin-top:-6px}
 .upload-progress-track{height:6px;border-radius:999px;background:#e3ebdc;overflow:hidden}
 .upload-progress-track>span{display:block;height:100%;background:#507d70;transition:width .15s ease}
+
+.lesson-overview-description{white-space:pre-line}
