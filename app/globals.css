@@ -162,7 +162,9 @@
 .auth-error{color:#b3441f;font-size:13px;margin-bottom:14px}
 .login-form .small-note a{color:#2c4634;font-weight:600;text-decoration:underline}
 
-.side-profile{position:relative}
-.side-signout{margin-left:auto;background:transparent;border:none;color:#98acb0;cursor:pointer;padding:6px;border-radius:6px}
+.side-profile{position:relative;min-width:0}
+.side-profile>div{min-width:0;flex:1}
+.side-profile strong,.side-profile small{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.side-signout{flex-shrink:0;margin-left:auto;background:transparent;border:none;color:#98acb0;cursor:pointer;padding:6px;border-radius:6px}
 .side-signout:hover{background:#ffffff14;color:#f5efe0}
-.side-signout svg{width:16px;height:16px}
+.side-signout svg{width:16px;height:16px;display:block}
