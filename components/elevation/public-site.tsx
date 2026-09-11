@@ -36,6 +36,7 @@ export function LoginPage(){
   const {data,error:signInError}=await supabase.auth.signInWithPassword({email,password});
   if(signInError){setSubmitting(false);setError(tr('Incorrect email or password.','Correo o contraseña incorrectos.','Falsche E-Mail oder falsches Passwort.'));return}
   const {data:profile}=await supabase.from('profiles').select('role').eq('id',data.user.id).single();
+  document.cookie=`elevation_role=${profile?.role==='admin'?'admin':'member'}; path=/; max-age=2592000; samesite=lax`;
   const from=params.get('from');
   router.push(from||(profile?.role==='admin'?'/admin':'/member'));
   router.refresh();

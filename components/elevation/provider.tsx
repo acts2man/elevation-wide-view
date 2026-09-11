@@ -126,16 +126,16 @@ export function ElevationProvider({children}:{children:ReactNode}) {
   supabase.auth.getSession().then(({data})=>{
    const u=data.session?.user??null;setUser(u);
    if(u){
-    supabase.from('profiles').select('role').eq('id',u.id).single().then(({data:p})=>setRole((p?.role as Role)??'member'));
+    supabase.from('profiles').select('role').eq('id',u.id).single().then(({data:p})=>{const r=(p?.role as Role)??'member';setRole(r);document.cookie=`elevation_role=${r}; path=/; max-age=2592000; samesite=lax`});
     loadOwnData(u.id);
    }
   });
   const {data:sub}=supabase.auth.onAuthStateChange((_event,session)=>{
    const u=session?.user??null;setUser(u);
    if(u){
-    supabase.from('profiles').select('role').eq('id',u.id).single().then(({data:p})=>setRole((p?.role as Role)??'member'));
+    supabase.from('profiles').select('role').eq('id',u.id).single().then(({data:p})=>{const r=(p?.role as Role)??'member';setRole(r);document.cookie=`elevation_role=${r}; path=/; max-age=2592000; samesite=lax`});
     loadOwnData(u.id);
-   }else{setRole(null);setCompleted([]);setNotes([])}
+   }else{setRole(null);setCompleted([]);setNotes([]);document.cookie='elevation_role=; path=/; max-age=0'}
   });
   return ()=>sub.subscription.unsubscribe();
  },[]);
