@@ -1,18 +1,23 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { ADMIN_COOKIE, expectedAdminCookie } from '@/lib/admin-auth';
+import { NextResponse, type NextRequest } from 'next/server';
+import { updateSession } from '@/lib/supabase/middleware';
 
-export const config = { matcher: ['/admin/:path*', '/api/admin/:path*'] };
+export const config = { matcher: ['/admin/:path*', '/member/:path*'] };
 
 export async function middleware(req: NextRequest) {
-  if (req.nextUrl.pathname.startsWith('/admin/login') || req.nextUrl.pathname === '/api/admin/login') return NextResponse.next();
-  const expected = await expectedAdminCookie();
-  // No ADMIN_PASSWORD configured yet: leave the admin studio open, matching the current design-preview behavior.
-  if (!expected) return NextResponse.next();
-  const cookie = req.cookies.get(ADMIN_COOKIE)?.value;
-  if (cookie === expected) return NextResponse.next();
-  if (req.nextUrl.pathname.startsWith('/api/')) return NextResponse.json({ ok: false, error: 'Unauthorized' }, { status: 401 });
-  const url = req.nextUrl.clone();
-  url.pathname = '/admin/login';
-  url.searchParams.set('from', req.nextUrl.pathname);
-  return NextResponse.redirect(url);
+  const { res, user, role } = await updateSession(req);
+  const isAdminPath = req.nextUrl.pathname.startsWith('/admin');
+  const isMemberPath = req.nextUrl.pathname.startsWith('/member');
+
+  if (!user) {
+    const url = req.nextUrl.clone();
+    url.pathname = '/login';
+    url.searchParams.set('from', req.nextUrl.pathname);
+    return NextResponse.redirect(url);
+  }
+  if (isAdminPath && role !== 'admin') {
+    const url = req.nextUrl.clone();
+    url.pathname = '/member';
+    return NextResponse.redirect(url);
+  }
+  return res;
 }
