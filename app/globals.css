@@ -174,3 +174,10 @@
 .upload-progress-track>span{display:block;height:100%;background:#507d70;transition:width .15s ease}
 
 .lesson-overview-description{white-space:pre-line}
+
+.lesson-heading-teacher{display:flex;flex-direction:column;align-items:flex-end;gap:10px}
+.instructor-mini.large{padding:0;border-top:none;gap:14px}
+.instructor-mini.large .avatar{width:52px;height:52px;font-size:15px}
+.instructor-mini.large small{font-size:11px}
+.instructor-mini.large strong{font-size:16px;margin-top:3px}
+@media(max-width:767px){.lesson-heading-teacher{align-items:center;flex-direction:row;justify-content:space-between;width:100%}.instructor-mini.large{gap:10px}.instructor-mini.large .avatar{width:40px;height:40px;font-size:13px}.instructor-mini.large strong{font-size:14px}}
