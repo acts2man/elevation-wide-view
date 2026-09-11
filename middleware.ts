@@ -4,9 +4,8 @@ import { updateSession } from '@/lib/supabase/middleware';
 export const config = { matcher: ['/admin/:path*', '/member/:path*'] };
 
 export async function middleware(req: NextRequest) {
-  const { res, user, role } = await updateSession(req);
   const isAdminPath = req.nextUrl.pathname.startsWith('/admin');
-  const isMemberPath = req.nextUrl.pathname.startsWith('/member');
+  const { res, user, role } = await updateSession(req, { withRole: isAdminPath });
 
   if (!user) {
     const url = req.nextUrl.clone();
