@@ -30,8 +30,17 @@ export async function updateSession(req: NextRequest, opts?: { withRole?: boolea
   const user = session?.user ?? null;
   let role: 'admin' | 'member' | null = null;
   if (user && opts?.withRole) {
-    const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single();
-    role = (profile?.role as 'admin' | 'member' | undefined) ?? null;
+    // The client sets this cookie right after resolving the role (login, session restore, auth
+    // state changes), so this avoids a Postgres round trip on every single admin navigation.
+    // Falls back to a real lookup only when the cookie hasn't been set yet (e.g. very first visit
+    // after upgrading, or a cleared cookie jar) — RLS is the actual security boundary regardless.
+    const cached = req.cookies.get('elevation_role')?.value;
+    if (cached === 'admin' || cached === 'member') {
+      role = cached;
+    } else {
+      const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single();
+      role = (profile?.role as 'admin' | 'member' | undefined) ?? null;
+    }
   }
   return { res, user, role };
 }
