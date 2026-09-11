@@ -8,14 +8,39 @@ import { initialCourses, pick, type Course, type Language, type Localized } from
 type Note = { id: string; course: string; lesson: number; text: string };
 type Role = 'admin' | 'member' | null;
 type SessionMediaPatch = { title?: string; videoUrl?: string; description?: string; image?: string; audioUrl?: string; audioName?: string };
+type StudyInput = { id?:string; title:string; description:string; category:Course['category']; status:Course['status'] };
 type State = {
  lang:Language; setLang:(v:Language)=>void; tr:(en:string,es:string,de:string)=>string; tx:(t:Localized)=>string;
  courses:Course[]; setCourses:React.Dispatch<React.SetStateAction<Course[]>>;
  saveSession:(courseId:string,index:number,patch:SessionMediaPatch)=>Promise<void>; savingSession:boolean;
+ addSession:(courseId:string)=>Promise<void>; saveStudy:(input:StudyInput)=>Promise<void>;
  user:User|null; role:Role; signOut:()=>Promise<void>;
  completed:string[]; complete:(key:string)=>void; notes:Note[]; saveNote:(note:Note)=>void;
 };
 const Context=createContext<State|null>(null);
+const PLACEHOLDER_TITLE:Localized=['New session','Nueva sesión','Neue Einheit'];
+
+type CourseRow = { id:string; title_en:string; title_es?:string|null; title_de?:string|null; subtitle_en?:string|null; subtitle_es?:string|null; subtitle_de?:string|null; description_en?:string|null; description_es?:string|null; description_de?:string|null; theme:string; category:string; status:string; lesson_count:number };
+
+/** Course structure (title/description/lesson count) lives in Supabase so admins can add sessions and studies without a code deploy. */
+function applyCourseRows(courses:Course[],rows:CourseRow[]):Course[]{
+ const byId=new Map(rows.map(r=>[r.id,r]));
+ const merged=courses.map(c=>{
+  const r=byId.get(c.id);
+  if(!r)return c;
+  byId.delete(c.id);
+  return buildCourseFromRow(r,c);
+ });
+ for(const r of byId.values())merged.push(buildCourseFromRow(r));
+ return merged;
+}
+function buildCourseFromRow(r:CourseRow,existing?:Course):Course{
+ const title:Localized=[r.title_en,r.title_es||r.title_en,r.title_de||r.title_en];
+ const subtitle:Localized=[r.subtitle_en||'',r.subtitle_es||r.subtitle_en||'',r.subtitle_de||r.subtitle_en||''];
+ const description:Localized=[r.description_en||'',r.description_es||r.description_en||'',r.description_de||r.description_en||''];
+ const lessons:Localized[]=Array.from({length:r.lesson_count},(_,i)=>existing?.lessons[i]??[...PLACEHOLDER_TITLE] as Localized);
+ return {id:r.id,title,subtitle,description,count:r.lesson_count,theme:r.theme,category:r.category as Course['category'],status:r.status as Course['status'],lessons,videos:existing?.videos,images:existing?.images,audio:existing?.audio,audioNames:existing?.audioNames,descriptions:existing?.descriptions};
+}
 
 type SessionRow = { course_id:string; lesson_index:number; title_en?:string|null; title_es?:string|null; title_de?:string|null; video_url?:string|null; image_url?:string|null; description_en?:string|null; description_es?:string|null; description_de?:string|null; audio_url?:string|null; audio_name?:string|null };
 
@@ -69,15 +94,23 @@ export function ElevationProvider({children}:{children:ReactNode}) {
 
  useEffect(()=>{const saved=localStorage.getItem('elevation-language');if(saved==='en'||saved==='es'||saved==='de')setLanguage(saved)},[]);
 
- const loadSessionMedia=async()=>{
-  const {data,error}=await supabase.from('session_media').select('*');
-  if(!error&&data)setCourses(cs=>applySessionRows(cs,data as SessionRow[]));
+ const loadAll=async()=>{
+  const [{data:courseRows,error:courseErr},{data:mediaRows,error:mediaErr}]=await Promise.all([
+   supabase.from('courses').select('*'),
+   supabase.from('session_media').select('*'),
+  ]);
+  setCourses(cs=>{
+   let next=cs;
+   if(!courseErr&&courseRows)next=applyCourseRows(next,courseRows as CourseRow[]);
+   if(!mediaErr&&mediaRows)next=applySessionRows(next,mediaRows as SessionRow[]);
+   return next;
+  });
  };
  useEffect(()=>{
-  loadSessionMedia();
-  const interval=window.setInterval(loadSessionMedia,20000);
-  window.addEventListener('focus',loadSessionMedia);
-  return ()=>{window.clearInterval(interval);window.removeEventListener('focus',loadSessionMedia)};
+  loadAll();
+  const interval=window.setInterval(loadAll,20000);
+  window.addEventListener('focus',loadAll);
+  return ()=>{window.clearInterval(interval);window.removeEventListener('focus',loadAll)};
  },[]);
 
  const loadOwnData=async(uid:string)=>{
@@ -126,6 +159,44 @@ export function ElevationProvider({children}:{children:ReactNode}) {
  };
  const signOut=async()=>{await supabase.auth.signOut()};
 
+ const addSession=async(courseId:string)=>{
+  const course=courses.find(c=>c.id===courseId);
+  if(!course)return;
+  const nextCount=course.lessons.length+1;
+  setCourses(old=>old.map(c=>c.id!==courseId?c:{...c,count:nextCount,lessons:[...c.lessons,[...PLACEHOLDER_TITLE] as Localized]}));
+  await supabase.from('courses').update({lesson_count:nextCount,updated_at:new Date().toISOString()}).eq('id',courseId);
+  await loadAll();
+ };
+
+ const saveStudy=async(input:StudyInput)=>{
+  const id=input.id??`study-${Date.now()}`;
+  const existing=courses.find(c=>c.id===id);
+  const langIndex=lang==='en'?0:lang==='es'?1:2;
+  const row:Record<string,unknown>={
+   id,
+   [`title_${lang}`]:input.title,
+   [`subtitle_${lang}`]:existing?pick(existing.subtitle,lang):input.description,
+   [`description_${lang}`]:input.description,
+   theme:existing?.theme??'foundation',
+   category:input.category,
+   status:input.status,
+   lesson_count:existing?.lessons.length??0,
+   updated_at:new Date().toISOString(),
+  };
+  if(!existing)row.title_en=row.title_en??input.title;
+  setCourses(old=>{
+   if(existing)return old.map(c=>{
+    if(c.id!==id)return c;
+    const title=[...c.title] as Localized;title[langIndex]=input.title;
+    const description=[...c.description] as Localized;description[langIndex]=input.description;
+    return {...c,title,description,category:input.category,status:input.status};
+   });
+   return [...old,{id,title:[input.title,input.title,input.title],subtitle:[input.description,input.description,input.description],description:[input.description,input.description,input.description],count:0,theme:'foundation',category:input.category,status:input.status,lessons:[]}];
+  });
+  await supabase.from('courses').upsert(row,{onConflict:'id'});
+  await loadAll();
+ };
+
  const saveSession=async(courseId:string,index:number,patch:SessionMediaPatch)=>{
   setCourses(old=>old.map(c=>{
    if(c.id!==courseId)return c;
@@ -164,10 +235,10 @@ export function ElevationProvider({children}:{children:ReactNode}) {
     }else if(patch.audioUrl===''){row.audio_url=null;row.audio_name=null}
    }
    const {error}=await supabase.from('session_media').upsert(row,{onConflict:'course_id,lesson_index'});
-   if(!error)await loadSessionMedia();
+   if(!error)await loadAll();
   }finally{setSavingSession(false)}
  };
 
- return <Context.Provider value={{lang,setLang,tr,tx:(t)=>pick(t,lang),courses,setCourses,saveSession,savingSession,user,role,signOut,completed,complete,notes,saveNote}}>{children}<Toaster position="bottom-right" richColors /></Context.Provider>
+ return <Context.Provider value={{lang,setLang,tr,tx:(t)=>pick(t,lang),courses,setCourses,saveSession,savingSession,addSession,saveStudy,user,role,signOut,completed,complete,notes,saveNote}}>{children}<Toaster position="bottom-right" richColors /></Context.Provider>
 }
 export function useElevation(){const context=useContext(Context);if(!context)throw new Error('ElevationProvider is required');return context}
