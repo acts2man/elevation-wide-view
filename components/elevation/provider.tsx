@@ -3,6 +3,7 @@ import { createContext, useContext, useEffect, useState, type ReactNode } from '
 import type { User } from '@supabase/supabase-js';
 import { Toaster } from '@/components/ui/sonner';
 import { supabaseBrowser } from '@/lib/supabase/client';
+import { uploadWithProgress } from '@/lib/supabase/upload';
 import { initialCourses, pick, type Course, type Language, type Localized } from './data';
 
 type Note = { id: string; course: string; lesson: number; text: string };
@@ -12,7 +13,7 @@ type StudyInput = { id?:string; title:string; description:string; category:Cours
 type State = {
  lang:Language; setLang:(v:Language)=>void; tr:(en:string,es:string,de:string)=>string; tx:(t:Localized)=>string;
  courses:Course[]; setCourses:React.Dispatch<React.SetStateAction<Course[]>>;
- saveSession:(courseId:string,index:number,patch:SessionMediaPatch)=>Promise<void>; savingSession:boolean;
+ saveSession:(courseId:string,index:number,patch:SessionMediaPatch,onProgress?:(label:string,fraction:number)=>void)=>Promise<void>; savingSession:boolean;
  addSession:(courseId:string)=>Promise<void>; saveStudy:(input:StudyInput)=>Promise<void>;
  user:User|null; role:Role; signOut:()=>Promise<void>;
  completed:string[]; complete:(key:string)=>void; notes:Note[]; saveNote:(note:Note)=>void;
@@ -197,7 +198,7 @@ export function ElevationProvider({children}:{children:ReactNode}) {
   await loadAll();
  };
 
- const saveSession=async(courseId:string,index:number,patch:SessionMediaPatch)=>{
+ const saveSession=async(courseId:string,index:number,patch:SessionMediaPatch,onProgress?:(label:string,fraction:number)=>void)=>{
   setCourses(old=>old.map(c=>{
    if(c.id!==courseId)return c;
    const lessons=c.lessons.map((l,i)=>{
@@ -222,20 +223,21 @@ export function ElevationProvider({children}:{children:ReactNode}) {
     if(patch.image.startsWith('data:')){
      const {blob,ext}=dataUrlToBlob(patch.image);
      const path=`${courseId}/${index}-image-${Date.now()}.${ext}`;
-     const {error:upErr}=await supabase.storage.from('session-media').upload(path,blob,{contentType:blob.type,upsert:true});
-     if(!upErr)row.image_url=supabase.storage.from('session-media').getPublicUrl(path).data.publicUrl;
+     await uploadWithProgress('session-media',path,blob,f=>onProgress?.('image',f));
+     row.image_url=supabase.storage.from('session-media').getPublicUrl(path).data.publicUrl;
     }else if(patch.image===''){row.image_url=null}
    }
    if(patch.audioUrl!==undefined){
     if(patch.audioUrl.startsWith('data:')){
      const {blob,ext}=dataUrlToBlob(patch.audioUrl);
      const path=`${courseId}/${index}-audio-${Date.now()}.${ext}`;
-     const {error:upErr}=await supabase.storage.from('session-media').upload(path,blob,{contentType:blob.type,upsert:true});
-     if(!upErr){row.audio_url=supabase.storage.from('session-media').getPublicUrl(path).data.publicUrl;row.audio_name=patch.audioName??null}
+     await uploadWithProgress('session-media',path,blob,f=>onProgress?.('audio',f));
+     row.audio_url=supabase.storage.from('session-media').getPublicUrl(path).data.publicUrl;row.audio_name=patch.audioName??null;
     }else if(patch.audioUrl===''){row.audio_url=null;row.audio_name=null}
    }
    const {error}=await supabase.from('session_media').upsert(row,{onConflict:'course_id,lesson_index'});
-   if(!error)await loadAll();
+   if(error)throw error;
+   await loadAll();
   }finally{setSavingSession(false)}
  };
 
