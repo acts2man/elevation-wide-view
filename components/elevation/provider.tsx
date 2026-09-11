@@ -53,6 +53,15 @@ export function ElevationProvider({children}:{children:ReactNode}) {
  useEffect(()=>{try{const raw=localStorage.getItem(VIDEO_KEY);if(raw){const map=JSON.parse(raw);if(map&&typeof map==='object')setCourses(cs=>applyStoredVideos(cs,map));}}catch{}},[]);
  // eslint-disable-next-line react-hooks/set-state-in-effect -- hydrate saved media after mount to avoid an SSR/client mismatch
  useEffect(()=>{try{const raw=localStorage.getItem(MEDIA_KEY);if(raw){const map=JSON.parse(raw);if(map&&typeof map==='object')setCourses(cs=>applyStoredMedia(cs,map));}}catch{}},[]);
+ // Other tabs/windows on this device write to the same keys; pick up their changes so every open screen stays in sync.
+ useEffect(()=>{
+  const onStorage=(e:StorageEvent)=>{
+   if(e.key===VIDEO_KEY){try{const map=e.newValue?JSON.parse(e.newValue):{};if(map&&typeof map==='object')setCourses(cs=>applyStoredVideos(cs,map));}catch{}}
+   if(e.key===MEDIA_KEY){try{const map=e.newValue?JSON.parse(e.newValue):{};if(map&&typeof map==='object')setCourses(cs=>applyStoredMedia(cs,map));}catch{}}
+  };
+  window.addEventListener('storage',onStorage);
+  return ()=>window.removeEventListener('storage',onStorage);
+ },[]);
  useEffect(()=>{document.documentElement.lang=lang},[lang]);
  const setLang=(v:Language)=>{setLanguage(v);localStorage.setItem('elevation-language',v)};
  const tr=(en:string,es:string,de:string)=>pick([en,es,de],lang);
