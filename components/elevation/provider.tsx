@@ -8,7 +8,7 @@ import { initialCourses, pick, type Course, type Language, type Localized } from
 
 type Note = { id: string; course: string; lesson: number; text: string };
 type Role = 'admin' | 'member' | null;
-type SessionMediaPatch = { title?: string; videoUrl?: string; description?: string; image?: string; audioUrl?: string; audioName?: string };
+type SessionMediaPatch = { title?: string; videoUrl?: string; videoFile?: File; description?: string; image?: string; audioUrl?: string; audioName?: string };
 type StudyInput = { id?:string; title:string; description:string; category:Course['category']; status:Course['status'] };
 type State = {
  lang:Language; setLang:(v:Language)=>void; tr:(en:string,es:string,de:string)=>string; tx:(t:Localized)=>string;
@@ -217,14 +217,12 @@ export function ElevationProvider({children}:{children:ReactNode}) {
   try{
    const row:Record<string,unknown>={course_id:courseId,lesson_index:index,updated_at:new Date().toISOString()};
    if(patch.title!==undefined)row[`title_${lang}`]=patch.title;
-   if(patch.videoUrl!==undefined){
-    if(patch.videoUrl.startsWith('data:')){
-     const {blob,ext}=dataUrlToBlob(patch.videoUrl);
-     const path=`${courseId}/${index}-video-${Date.now()}.${ext}`;
-     await uploadWithProgress('session-media',path,blob,f=>onProgress?.('video',f));
-     row.video_url=supabase.storage.from('session-media').getPublicUrl(path).data.publicUrl;
-    }else{row.video_url=patch.videoUrl.trim()||null}
-   }
+   if(patch.videoFile){
+    const ext=patch.videoFile.name.split('.').pop()||'mp4';
+    const path=`${courseId}/${index}-video-${Date.now()}.${ext}`;
+    await uploadWithProgress('session-media',path,patch.videoFile,f=>onProgress?.('video',f));
+    row.video_url=supabase.storage.from('session-media').getPublicUrl(path).data.publicUrl;
+   }else if(patch.videoUrl!==undefined){row.video_url=patch.videoUrl.trim()||null}
    if(patch.description!==undefined)row[`description_${lang}`]=patch.description;
    if(patch.image!==undefined){
     if(patch.image.startsWith('data:')){
