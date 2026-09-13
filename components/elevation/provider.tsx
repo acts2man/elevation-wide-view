@@ -217,7 +217,14 @@ export function ElevationProvider({children}:{children:ReactNode}) {
   try{
    const row:Record<string,unknown>={course_id:courseId,lesson_index:index,updated_at:new Date().toISOString()};
    if(patch.title!==undefined)row[`title_${lang}`]=patch.title;
-   if(patch.videoUrl!==undefined)row.video_url=patch.videoUrl.trim();
+   if(patch.videoUrl!==undefined){
+    if(patch.videoUrl.startsWith('data:')){
+     const {blob,ext}=dataUrlToBlob(patch.videoUrl);
+     const path=`${courseId}/${index}-video-${Date.now()}.${ext}`;
+     await uploadWithProgress('session-media',path,blob,f=>onProgress?.('video',f));
+     row.video_url=supabase.storage.from('session-media').getPublicUrl(path).data.publicUrl;
+    }else{row.video_url=patch.videoUrl.trim()||null}
+   }
    if(patch.description!==undefined)row[`description_${lang}`]=patch.description;
    if(patch.image!==undefined){
     if(patch.image.startsWith('data:')){
